@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "nama": "Pantai Kuta",
+    "kategori": "Pantai",
+    "provinsi": "Bali",
+    "harga": 25000,
+    "rating": 4.7,
+    "gambar": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400",
+    "detail": {
+      "pengelola": "Dinas Pariwisata Bali",
+      "jamBuka": "06.00 - 18.00",
+      "fasilitas": ["Parkir", "Toilet", "Warung", "Penyewaan Papan Selancar"]
+    },
+    "tags": ["Pantai", "Surfing", "Sunset"]
+  },
+  {
+    "id": 2,
+    "nama": "Candi Borobudur",
+    "kategori": "Sejarah",
+    "provinsi": "Jawa Tengah",
+    "harga": 50000,
+    "rating": 4.9,
+    "gambar": "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=400",
+    "detail": {
+      "pengelola": "PT Taman Wisata Candi",
+      "jamBuka": "06.00 - 17.00",
+      "fasilitas": ["Parkir", "Toilet", "Museum", "Pemandu Wisata"]
+    },
+    "tags": ["Sejarah", "Budaya", "UNESCO"]
+  },
+  {
+    "id": 3,
+    "nama": "Raja Ampat",
+    "kategori": "Bahari",
+    "provinsi": "Papua Barat",
+    "harga": 500000,
+    "rating": 5.0,
+    "gambar": "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400",
+    "detail": {
+      "pengelola": "Dinas Pariwisata Papua Barat",
+      "jamBuka": "08.00 - 17.00",
+      "fasilitas": ["Penginapan", "Diving", "Snorkeling", "Perahu"]
+    },
+    "tags": ["Bahari", "Diving", "Alam"]
+  },
+  {
+    "id": 4,
+    "nama": "Gunung Bromo",
+    "kategori": "Alam",
+    "provinsi": "Jawa Timur",
+    "harga": 35000,
+    "rating": 4.8,
+    "gambar": "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=400",
+    "detail": {
+      "pengelola": "Taman Nasional Bromo Tengger Semeru",
+      "jamBuka": "00.00 - 24.00",
+      "fasilitas": ["Parkir", "Jeep", "Kuda", "Warung"]
+    },
+    "tags": ["Gunung", "Sunrise", "Alam"]
+  },
+  {
+    "id": 5,
+    "nama": "Danau Toba",
+    "kategori": "Danau",
+    "provinsi": "Sumatera Utara",
+    "harga": 20000,
+    "rating": 4.6,
+    "gambar": "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400",
+    "detail": {
+      "pengelola": "Badan Otorita Danau Toba",
+      "jamBuka": "07.00 - 18.00",
+      "fasilitas": ["Parkir", "Kapal Feri", "Penginapan", "Restoran"]
+    },
+    "tags": ["Danau", "Budaya", "Alam"]
+  },
+  {
+    "id": 6,
+    "nama": "Taman Nasional Komodo",
+    "kategori": "Alam",
+    "provinsi": "Nusa Tenggara Timur",
+    "harga": 150000,
+    "rating": 4.8,
+    "gambar": "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=400",
+    "detail": {
+      "pengelola": "Balai Taman Nasional Komodo",
+      "jamBuka": "07.00 - 17.00",
+      "fasilitas": ["Pemandu", "Kapal", "Snorkeling", "Camping"]
+    },
+    "tags": ["Alam", "Satwa", "UNESCO"]
+  },
+  {
+    "id": 7,
+    "nama": "Prambanan",
+    "kategori": "Sejarah",
+    "provinsi": "Yogyakarta",
+    "harga": 50000,
+    "rating": 4.7,
+    "gambar": "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?w=400",
+    "detail": {
+      "pengelola": "PT Taman Wisata Candi",
+      "jamBuka": "06.00 - 17.00",
+      "fasilitas": ["Parkir", "Museum", "Pemandu", "Toko Souvenir"]
+    },
+    "tags": ["Sejarah", "Budaya", "UNESCO"]
+  },
+  {
+    "id": 8,
+    "nama": "Pantai Pink",
+    "kategori": "Pantai",
+    "provinsi": "Nusa Tenggara Timur",
+    "harga": 30000,
+    "rating": 4.5,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+    "detail": {
+      "pengelola": "Dinas Pariwisata NTT",
+      "jamBuka": "07.00 - 17.00",
+      "fasilitas": ["Parkir", "Toilet", "Snorkeling", "Warung"]
+    },
+    "tags": ["Pantai", "Snorkeling", "Alam"]
+  },
+  {
+    "id": 9,
+    "nama": "Kawah Ijen",
+    "kategori": "Alam",
+    "provinsi": "Jawa Timur",
+    "harga": 15000,
+    "rating": 4.6,
+    "gambar": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+    "detail": {
+      "pengelola": "Taman Nasional Alas Purwo",
+      "jamBuka": "00.00 - 24.00",
+      "fasilitas": ["Parkir", "Pemandu", "Warung", "Masker Gas"]
+    },
+    "tags": ["Gunung", "Blue Fire", "Alam"]
+  },
+  {
+    "id": 10,
+    "nama": "Keraton Yogyakarta",
+    "kategori": "Sejarah",
+    "provinsi": "Yogyakarta",
+    "harga": 15000,
+    "rating": 4.5,
+    "gambar": "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400",
+    "detail": {
+      "pengelola": "Keraton Ngayogyakarta Hadiningrat",
+      "jamBuka": "08.00 - 14.00",
+      "fasilitas": ["Pemandu", "Museum", "Toko Souvenir", "Pertunjukan Seni"]
+    },
+    "tags": ["Sejarah", "Budaya", "Seni"]
+  },
+  {
+    "id": 11,
+    "nama": "Pantai Labuan Bajo",
+    "kategori": "Pantai",
+    "provinsi": "Nusa Tenggara Timur",
+    "harga": 50000,
+    "rating": 4.8,
+    "gambar": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400",
+    "detail": {
+      "pengelola": "Badan Pelaksana Otorita Labuan Bajo",
+      "jamBuka": "07.00 - 18.00",
+      "fasilitas": ["Marina", "Diving", "Snorkeling", "Resort"]
+    },
+    "tags": ["Pantai", "Diving", "Bahari"]
+  },
+  {
+    "id": 12,
+    "nama": "Taman Mini Indonesia Indah",
+    "kategori": "Budaya",
+    "provinsi": "DKI Jakarta",
+    "harga": 25000,
+    "rating": 4.3,
+    "gambar": "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=400",
+    "detail": {
+      "pengelola": "PT Taman Mini Indonesia Indah",
+      "jamBuka": "07.00 - 19.00",
+      "fasilitas": ["Parkir", "Kereta Gantung", "Museum", "Restoran"]
+    },
+    "tags": ["Budaya", "Edukasi", "Keluarga"]
+  },
+  {
+    "id": 13,
+    "nama": "Gunung Rinjani",
+    "kategori": "Alam",
+    "provinsi": "Nusa Tenggara Barat",
+    "harga": 150000,
+    "rating": 4.9,
+    "gambar": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400",
+    "detail": {
+      "pengelola": "Taman Nasional Gunung Rinjani",
+      "jamBuka": "06.00 - 18.00",
+      "fasilitas": ["Pemandu", "Porter", "Camping", "Warung"]
+    },
+    "tags": ["Gunung", "Trekking", "Alam"]
+  },
+  {
+    "id": 14,
+    "nama": "Pantai Senggigi",
+    "kategori": "Pantai",
+    "provinsi": "Nusa Tenggara Barat",
+    "harga": 10000,
+    "rating": 4.4,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+    "detail": {
+      "pengelola": "Dinas Pariwisata NTB",
+      "jamBuka": "06.00 - 18.00",
+      "fasilitas": ["Parkir", "Hotel", "Restoran", "Snorkeling"]
+    },
+    "tags": ["Pantai", "Sunset", "Alam"]
+  },
+  {
+    "id": 15,
+    "nama": "Ubud",
+    "kategori": "Budaya",
+    "provinsi": "Bali",
+    "harga": 0,
+    "rating": 4.8,
+    "gambar": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400",
+    "detail": {
+      "pengelola": "Pemerintah Kabupaten Gianyar",
+      "jamBuka": "08.00 - 20.00",
+      "fasilitas": ["Galeri Seni", "Spa", "Restoran", "Pasar Seni"]
+    },
+    "tags": ["Budaya", "Seni", "Kuliner"]
+  },
+  {
+    "id": 16,
+    "nama": "Pulau Belitung",
+    "kategori": "Pantai",
+    "provinsi": "Bangka Belitung",
+    "harga": 30000,
+    "rating": 4.7,
+    "gambar": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400",
+    "detail": {
+      "pengelola": "Dinas Pariwisata Belitung",
+      "jamBuka": "07.00 - 17.00",
+      "fasilitas": ["Kapal", "Snorkeling", "Penginapan", "Warung"]
+    },
+    "tags": ["Pantai", "Bahari", "Alam"]
+  },
+  {
+    "id": 17,
+    "nama": "Taman Nasional Baluran",
+    "kategori": "Alam",
+    "provinsi": "Jawa Timur",
+    "harga": 25000,
+    "rating": 4.5,
+    "gambar": "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=400",
+    "detail": {
+      "pengelola": "Balai Taman Nasional Baluran",
+      "jamBuka": "07.00 - 17.00",
+      "fasilitas": ["Parkir", "Pemandu", "Camping", "Menara Pantau"]
+    },
+    "tags": ["Alam", "Satwa", "Safari"]
+  },
+  {
+    "id": 18,
+    "nama": "Istana Maimun",
+    "kategori": "Sejarah",
+    "provinsi": "Sumatera Utara",
+    "harga": 10000,
+    "rating": 4.4,
+    "gambar": "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=400",
+    "detail": {
+      "pengelola": "Kesultanan Deli",
+      "jamBuka": "08.00 - 17.00",
+      "fasilitas": ["Pemandu", "Museum", "Toko Souvenir", "Foto Kostum"]
+    },
+    "tags": ["Sejarah", "Budaya", "Arsitektur"]
+  },
+  {
+    "id": 19,
+    "nama": "Pantai Parangtritis",
+    "kategori": "Pantai",
+    "provinsi": "Yogyakarta",
+    "harga": 10000,
+    "rating": 4.3,
+    "gambar": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+    "detail": {
+      "pengelola": "Dinas Pariwisata Bantul",
+      "jamBuka": "06.00 - 18.00",
+      "fasilitas": ["Parkir", "ATV", "Delman", "Warung"]
+    },
+    "tags": ["Pantai", "Sunset", "Budaya"]
+  },
+  {
+    "id": 20,
+    "nama": "Kebun Raya Bogor",
+    "kategori": "Alam",
+    "provinsi": "Jawa Barat",
+    "harga": 15000,
+    "rating": 4.5,
+    "gambar": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400",
+    "detail": {
+      "pengelola": "BRIN",
+      "jamBuka": "08.00 - 16.00",
+      "fasilitas": ["Parkir", "Pemandu", "Restoran", "Toko Souvenir"]
+    },
+    "tags": ["Alam", "Edukasi", "Keluarga"]
+  }
+]
