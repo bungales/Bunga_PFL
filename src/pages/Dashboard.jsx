@@ -34,9 +34,7 @@ const statusColor = { Selesai: "text-hijau bg-green-100", Proses: "text-primary 
 export default function Dashboard() {
   return (
     <div>
-      <PageHeader title="Dashboard" breadcrumb={["Home", "Dashboard"]}>
-        <span className="text-sm text-teks-samping">Sabtu, 2 Mei 2026</span>
-      </PageHeader>
+      <PageHeader title="Dashboard" breadcrumb={["Home", "Dashboard"]} />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">

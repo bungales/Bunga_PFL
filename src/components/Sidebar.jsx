@@ -27,10 +27,8 @@ export default function Sidebar() {
   return (
     <div id="sidebar" className="flex min-h-screen w-64 flex-col bg-primary p-6 shadow-xl">
       {/* Logo */}
-      <div id="sidebar-logo" className="flex flex-col mb-8">
-        <span className="font-poppins text-3xl font-extrabold text-white">
-          Netto Laundry
-        </span>
+      <div id="sidebar-logo" className="flex justify-center mb-8">
+        <img src="/img/logo Netto loundry.jpeg" alt="Netto Laundry" className="w-36 h-auto object-contain" />
       </div>
 
       {/* Menu */}
