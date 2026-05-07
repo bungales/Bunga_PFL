@@ -1,132 +1,169 @@
+import React from "react";
 import PageHeader from "../components/PageHeader";
-import { MdPeople, MdReceipt, MdStar, MdTrendingUp, MdLocalLaundryService, MdNotifications } from "react-icons/md";
+import { 
+  MdPeople, MdReceipt, MdTrendingUp, MdHistory, 
+  MdArrowUpward, MdArrowDownward 
+} from "react-icons/md";
+import { 
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, 
+  Tooltip, ResponsiveContainer 
+} from "recharts";
+
 import customers from "../data/customers.json";
 import transactions from "../data/transactions.json";
 
+// Data Grafik agar mirip lekukannya dengan foto
+const chartData = [
+  { x: '5k', y: 20 }, { x: '10k', y: 30 }, { x: '15k', y: 50 },
+  { x: '20k', y: 40 }, { x: '25k', y: 85 }, { x: '30k', y: 35 },
+  { x: '35k', y: 55 }, { x: '40k', y: 50 }, { x: '45k', y: 65 },
+  { x: '50k', y: 25 }, { x: '55k', y: 35 }, { x: '60k', y: 30 },
+  { x: '65k', y: 75 }, { x: '70k', y: 45 }, { x: '75k', y: 60 },
+  { x: '80k', y: 50 }, { x: '85k', y: 45 }, { x: '90k', y: 55 }
+];
+
 const stats = [
   {
-    label: "Total Pelanggan", icon: <MdPeople className="text-3xl text-white" />,
-    value: customers.length, sub: "+5 bulan ini", color: "bg-primary", light: "bg-primary-light", textColor: "text-primary"
+    label: "Total User", value: "40,689",
+    trend: "8.5%", isUp: true, 
+    icon: <MdPeople />, iconBg: "bg-[#e5e7ff]", iconColor: "text-[#4318ff]"
   },
   {
-    label: "Transaksi Bulan Ini", icon: <MdReceipt className="text-3xl text-white" />,
-    value: transactions.filter(t => t.date.startsWith("2026-04") || t.date.startsWith("2026-05")).length,
-    sub: "+12% dari bulan lalu", color: "bg-hijau", light: "bg-green-100", textColor: "text-hijau"
+    label: "Total Order", value: "10,293",
+    trend: "1.3%", isUp: true,
+    icon: <MdReceipt />, iconBg: "bg-[#fff3e0]", iconColor: "text-[#ffb547]"
   },
   {
-    label: "Pelanggan Aktif", icon: <MdStar className="text-3xl text-white" />,
-    value: customers.filter(c => c.status === "active").length,
-    sub: `${customers.filter(c => c.loyalty === "Gold").length} Gold member`, color: "bg-kuning", light: "bg-yellow-100", textColor: "text-kuning"
+    label: "Total Sales", value: "$89,000",
+    trend: "4.3%", isUp: false,
+    icon: <MdTrendingUp />, iconBg: "bg-[#e2f9f0]", iconColor: "text-[#00b69b]"
   },
   {
-    label: "Pendapatan Bulan Ini", icon: <MdTrendingUp className="text-3xl text-white" />,
-    value: "Rp " + (transactions.reduce((a, b) => a + b.price, 0) / 1000).toFixed(0) + "k",
-    sub: "+8% dari bulan lalu", color: "bg-ungu", light: "bg-purple-100", textColor: "text-ungu"
+    label: "Total Pending", value: "2040",
+    trend: "1.8%", isUp: true,
+    icon: <MdHistory />, iconBg: "bg-[#ffe5e5]", iconColor: "text-[#f93c65]"
   },
 ];
 
-const recentTransactions = transactions.slice(0, 5);
-const topCustomers = [...customers].sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 5);
-
-const loyaltyColor = { Gold: "text-kuning bg-yellow-100", Silver: "text-gray-500 bg-gray-100", Bronze: "text-orange-500 bg-orange-100" };
-const statusColor = { Selesai: "text-hijau bg-green-100", Proses: "text-primary bg-primary-light", Menunggu: "text-kuning bg-yellow-100" };
-
 export default function Dashboard() {
   return (
-    <div>
-      <PageHeader title="Dashboard" breadcrumb={["Home", "Dashboard"]} />
+    <div className="space-y-6 bg-[#f5f6fa] min-h-screen pb-10">
+      <h1 className="text-2xl font-bold text-[#202224] mb-6">Dashboard</h1>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* --- STATS CARDS (Sesuai Foto) --- */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((s, i) => (
-          <div key={i} className="bg-white rounded-2xl shadow-sm p-5 flex items-center space-x-4">
-            <div className={`${s.color} rounded-2xl p-3 flex-shrink-0`}>{s.icon}</div>
-            <div>
-              <p className="text-teks-samping text-xs font-medium">{s.label}</p>
-              <p className="text-2xl font-bold text-teks">{s.value}</p>
-              <p className={`text-xs font-medium ${s.textColor}`}>{s.sub}</p>
+          <div key={i} className="bg-white rounded-xl p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-gray-500 text-sm font-medium">{s.label}</p>
+                <h3 className="text-2xl font-bold text-[#202224] mt-1">{s.value}</h3>
+              </div>
+              <div className={`p-3 rounded-2xl text-2xl ${s.iconBg} ${s.iconColor}`}>
+                {s.icon}
+              </div>
+            </div>
+            <div className="flex items-center mt-4 text-[13px]">
+              <span className={`flex items-center font-bold ${s.isUp ? "text-[#00b69b]" : "text-[#f93c65]"}`}>
+                {s.isUp ? <MdArrowUpward className="mr-1" /> : <MdArrowDownward className="mr-1" />}
+                {s.trend}
+              </span>
+              <span className="text-gray-400 ml-1">Up from yesterday</span>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-        {/* Recent Transactions */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-5">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-teks">Transaksi Terbaru</h3>
-            <span className="text-xs text-primary cursor-pointer hover:underline">Lihat semua</span>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-teks-samping text-xs border-b border-garis">
-                  <th className="text-left pb-2 font-medium">Pelanggan</th>
-                  <th className="text-left pb-2 font-medium">Layanan</th>
-                  <th className="text-left pb-2 font-medium">Total</th>
-                  <th className="text-left pb-2 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentTransactions.map((t) => (
-                  <tr key={t.id} className="border-b border-garis last:border-0">
-                    <td className="py-3 font-medium text-teks">{t.customerName}</td>
-                    <td className="py-3 text-teks-samping">{t.service}</td>
-                    <td className="py-3 font-semibold text-teks">Rp {t.price.toLocaleString()}</td>
-                    <td className="py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor[t.status]}`}>{t.status}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {/* --- SALES DETAILS (GRAFIK PERSIS FOTO) --- */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex justify-between items-center mb-8">
+          <h3 className="text-lg font-bold text-[#202224]">Sales Details</h3>
+          <select className="border border-gray-200 text-sm rounded-lg px-3 py-1.5 text-gray-500 outline-none">
+            <option>October</option>
+          </select>
         </div>
-
-        {/* Top Customers */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <h3 className="font-semibold text-teks mb-4">Top Pelanggan</h3>
-          <div className="space-y-3">
-            {topCustomers.map((c, i) => (
-              <div key={c.id} className="flex items-center space-x-3">
-                <span className="w-6 h-6 rounded-full bg-primary-light text-primary text-xs font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
-                <img src={`https://avatar.iran.liara.run/public/${i + 10}`} className="w-8 h-8 rounded-full" alt="" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-teks truncate">{c.name}</p>
-                  <p className="text-xs text-teks-samping">Rp {c.totalSpent.toLocaleString()}</p>
-                </div>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${loyaltyColor[c.loyalty]}`}>{c.loyalty}</span>
-              </div>
-            ))}
-          </div>
+        <div className="h-[350px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData}>
+              <defs>
+                <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#4318ff" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#4318ff" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f1f1f1" />
+              <XAxis 
+                dataKey="x" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{fill: '#a3aed0', fontSize: 12}} 
+                dy={10}
+              />
+              <YAxis 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{fill: '#a3aed0', fontSize: 12}}
+                tickFormatter={(v) => `${v}%`}
+              />
+              <Tooltip 
+                cursor={{ stroke: '#4318ff', strokeWidth: 2 }}
+                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="y" 
+                stroke="#4318ff" 
+                strokeWidth={3}
+                fillOpacity={1} 
+                fill="url(#colorSales)" 
+                dot={{ r: 4, fill: "#4318ff", strokeWidth: 2, stroke: "#fff" }}
+                activeDot={{ r: 6, fill: "#4318ff" }}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Quick Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-primary rounded-2xl p-5 text-white">
-          <div className="flex items-center justify-between mb-3">
-            <MdLocalLaundryService className="text-3xl text-blue-200" />
-            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">Hari ini</span>
-          </div>
-          <p className="text-3xl font-bold">{transactions.filter(t => t.status === "Proses").length}</p>
-          <p className="text-blue-200 text-sm mt-1">Sedang Diproses</p>
+      {/* --- DEALS DETAILS (TABEL PERSIS FOTO) --- */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-bold text-[#202224]">Deals Details</h3>
+          <select className="border border-gray-200 text-sm rounded-lg px-3 py-1.5 text-gray-500 outline-none">
+            <option>October</option>
+          </select>
         </div>
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <MdNotifications className="text-3xl text-kuning" />
-            <span className="text-xs bg-yellow-100 text-kuning px-2 py-1 rounded-full">Perlu aksi</span>
-          </div>
-          <p className="text-3xl font-bold text-teks">{customers.filter(c => c.status === "inactive").length}</p>
-          <p className="text-teks-samping text-sm mt-1">Pelanggan Tidak Aktif</p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <MdStar className="text-3xl text-kuning" />
-            <span className="text-xs bg-yellow-100 text-kuning px-2 py-1 rounded-full">Loyalty</span>
-          </div>
-          <p className="text-3xl font-bold text-teks">{customers.filter(c => c.loyalty === "Gold").length}</p>
-          <p className="text-teks-samping text-sm mt-1">Gold Members</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-[#f9f9fb] text-[#202224] text-sm">
+                <th className="px-4 py-4 rounded-l-xl font-bold">Product Name</th>
+                <th className="px-4 py-4 font-bold">Location</th>
+                <th className="px-4 py-4 font-bold">Date - Time</th>
+                <th className="px-4 py-4 font-bold">Piece</th>
+                <th className="px-4 py-4 font-bold">Amount</th>
+                <th className="px-4 py-4 rounded-r-xl font-bold">Status</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              <tr className="border-b border-gray-50 hover:bg-gray-50 transition">
+                <td className="px-4 py-5">
+                  <div className="flex items-center gap-3">
+                    <img src="https://m.media-amazon.com/images/I/71L2iBSySjL._AC_SL1500_.jpg" className="w-10 h-10 rounded-lg object-cover" alt="" />
+                    <span className="font-semibold text-[#202224]">Apple Watch</span>
+                  </div>
+                </td>
+                <td className="px-4 py-5 text-gray-600">6096 Marjolaine Landing</td>
+                <td className="px-4 py-5 text-gray-600">12.09.2026 - 12.53 PM</td>
+                <td className="px-4 py-5 text-gray-600">423</td>
+                <td className="px-4 py-5 font-bold text-[#202224]">$34,295</td>
+                <td className="px-4 py-5">
+                  <span className="px-6 py-2 rounded-full text-xs font-bold bg-[#00b69b] text-white">
+                    Delivered
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

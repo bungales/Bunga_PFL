@@ -1,78 +1,48 @@
 import { Outlet } from "react-router-dom";
-import { MdVerified, MdAccessTime, MdBarChart } from "react-icons/md";
 
 export default function AuthLayout() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="flex w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl">
+    /* Latar belakang menggunakan gradasi biru DashStack.
+       Kita menambahkan pseudo-element untuk efek gelombang (Waves) 
+       seperti pada gambar yang Anda kirim.
+    */
+    <div className="min-h-screen flex items-center justify-center bg-[#4880FF] relative overflow-hidden font-barlow">
+      
+      {/* Efek Gelombang Background (Aksen Dekoratif) */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[60%] rounded-full bg-white/10 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[70%] rounded-full bg-[#3661FF]/50 blur-[100px]" />
+        {/* SVG Gelombang halus agar mirip dengan gambar DashStack */}
+        <svg className="absolute bottom-0 left-0 w-full opacity-20" viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#ffffff" fillOpacity="1" d="M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,144C672,139,768,181,864,181.3C960,181,1056,139,1152,122.7C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+      </div>
 
-        {/* ── Kiri: Form ── */}
-        <div className="w-full lg:w-[45%] bg-white flex flex-col justify-center px-10 py-12">
-          <Outlet />
-          <p className="text-[11px] text-teks-samping mt-8 text-center">
-            © 2026 Netto Laundry. All rights reserved.
-          </p>
-        </div>
-
-        {/* ── Kanan: Branding ── */}
-        <div className="hidden lg:flex w-[55%] relative overflow-hidden
-                        bg-gradient-to-br from-[#1a56db] via-[#1e40af] to-[#1e3a8a]
-                        flex-col items-center justify-center p-10">
-
-          {/* Blob dekoratif */}
-          <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-white/10 blur-3xl" />
-          <div className="absolute -bottom-24 -left-16 w-80 h-80 rounded-full bg-blue-300/20 blur-3xl" />
-
-          <div className="relative z-10 text-center">
-
-            {/* Logo — putih bg supaya tulisan kelihatan */}
-            <div className="w-36 h-36 rounded-3xl bg-white mx-auto mb-6 shadow-2xl
-                            flex items-center justify-center overflow-hidden">
-              <img
-                src="/img/logo Netto loundry.jpeg"
-                alt="Netto Laundry"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            <h2 className="text-white font-bold text-2xl mb-2">
-              Sistem Manajemen Laundry
-            </h2>
-            <p className="text-blue-200 text-sm mb-8 max-w-xs mx-auto leading-relaxed">
-              Kelola pelanggan, transaksi, dan layanan laundry dengan mudah melalui dashboard admin.
-            </p>
-
-            {/* Icon fitur */}
-            <div className="flex justify-center gap-4 mb-8">
-              {[
-                { icon: "🧺", label: "Tracking" },
-                { icon: "⭐", label: "Loyalitas" },
-                { icon: "📊", label: "Laporan" },
-              ].map((f, i) => (
-                <div key={i}
-                  className="flex flex-col items-center bg-white/15 backdrop-blur-sm
-                             rounded-2xl px-5 py-4 border border-white/20 hover:bg-white/20 transition">
-                  <span className="text-2xl mb-1">{f.icon}</span>
-                  <span className="text-white text-xs font-medium">{f.label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Badge bawah */}
-            <div className="flex justify-center gap-5 text-blue-200 text-xs">
-              <span className="flex items-center gap-1">
-                <MdVerified className="text-base" /> Sistem Terjamin
-              </span>
-              <span className="flex items-center gap-1">
-                <MdAccessTime className="text-base" /> 24/7 Akses
-              </span>
-              <span className="flex items-center gap-1">
-                <MdBarChart className="text-base" /> Real-time Data
-              </span>
-            </div>
+      {/* Card Login Utama */}
+      <div className="relative z-10 w-full max-w-[480px] bg-white rounded-[24px] p-10 shadow-2xl mx-4">
+        
+        {/* Logo Netto Laundry */}
+        <div className="flex justify-center mb-8">
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-md">
+            <img 
+              src="/img/logo Netto loundry.jpeg" 
+              alt="Netto Laundry" 
+              className="w-full h-full object-contain"
+            />
           </div>
         </div>
 
+        {/* Konten Form (Login/Register) dari Outlet */}
+        <div className="w-full">
+          <Outlet />
+        </div>
+
+        {/* Copyright Footer */}
+        <div className="mt-8 text-center">
+          <p className="text-[11px] text-gray-400">
+            © 2026 <span className="text-[#4880FF] font-bold">Netto Laundry</span>. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
   );
