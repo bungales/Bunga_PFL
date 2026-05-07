@@ -23,6 +23,7 @@ const menuClass = ({ isActive }) =>
     ? "text-primary bg-blue-50/50 font-bold"
     : "text-[#202224] hover:bg-gray-50 hover:text-primary"}`;
 
+    
 export default function Sidebar() {
   return (
     <div id="sidebar" className="flex min-h-screen w-64 flex-col bg-white border-r border-gray-100 shadow-sm font-barlow">
