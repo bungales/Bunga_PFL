@@ -14,6 +14,7 @@ const Loyalty = React.lazy(() => import("./pages/Loyalty"));
 const Segmentation = React.lazy(() => import("./pages/Segmentation"));
 const Feedback = React.lazy(() => import("./pages/Feedback"));
 const Reports = React.lazy(() => import("./pages/Reports"));
+const CustomerDetail = React.lazy(() => import("./pages/CustomerDetail"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 const Login = React.lazy(() => import("./pages/auth/Login"));
@@ -40,6 +41,7 @@ export default function App() {
         <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/:id" element={<CustomerDetail />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/tracking" element={<Tracking />} />
           <Route path="/notifications" element={<Notifications />} />

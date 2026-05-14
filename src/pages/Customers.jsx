@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import customersData from "../data/customers.json";
 import { MdSearch, MdAdd, MdEdit, MdDelete, MdClose } from "react-icons/md";
@@ -72,9 +73,9 @@ export default function Customers() {
                 <tr key={c.id} className="border-b border-garis last:border-0 hover:bg-latar transition">
                   <td className="py-3">
                     <div className="flex items-center space-x-3">
-                      <img src={`https://avatar.iran.liara.run/public/${c.id.slice(1)}`} className="w-8 h-8 rounded-full" alt="" />
+                      <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=3b82f6&color=fff&size=64`} className="w-8 h-8 rounded-full" alt={c.name} />
                       <div>
-                        <p className="font-medium text-teks">{c.name}</p>
+                        <Link to={`/customers/${c.id}`} className="font-medium text-teks hover:text-primary hover:underline">{c.name}</Link>
                         <p className="text-xs text-teks-samping">{c.email}</p>
                       </div>
                     </div>
