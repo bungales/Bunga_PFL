@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import customersData from "../data/customers.json";
-import { MdSearch, MdAdd, MdEdit, MdDelete, MdClose } from "react-icons/md";
+import { MdSearch, MdAdd, MdEdit, MdDelete, MdClose, MdVisibility } from "react-icons/md";
 
 const loyaltyColor = { Gold: "text-kuning bg-yellow-100", Silver: "text-gray-500 bg-gray-100", Bronze: "text-orange-500 bg-orange-100" };
 const statusColor = { active: "text-hijau bg-green-100", inactive: "text-merah bg-red-100" };
@@ -87,6 +87,7 @@ export default function Customers() {
                   <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor[c.status]}`}>{c.status === "active" ? "Aktif" : "Tidak Aktif"}</span></td>
                   <td className="py-3">
                     <div className="flex space-x-2">
+                      <Link to={`/customers/${c.id}`} className="p-1.5 bg-green-100 text-hijau rounded-lg hover:bg-green-200 transition" title="Lihat Detail"><MdVisibility /></Link>
                       <button onClick={() => openEdit(c)} className="p-1.5 bg-primary-light text-primary rounded-lg hover:bg-blue-200 transition"><MdEdit /></button>
                       <button onClick={() => handleDelete(c.id)} className="p-1.5 bg-red-100 text-merah rounded-lg hover:bg-red-200 transition"><MdDelete /></button>
                     </div>
