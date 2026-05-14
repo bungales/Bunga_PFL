@@ -1,13 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('/fonts/Poppins-Regular.ttf');
-}
-@font-face {
-  font-family: 'Barlow';
-  src: url('/fonts/Barlow-Regular.ttf');
-}
 
 @theme {
   --font-poppins: "Poppins", sans-serif;
