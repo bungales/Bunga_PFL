@@ -1,4 +1,8 @@
 import PageHeader from "../components/PageHeader";
+import StatCard from "../components/StatCard";
+import Card from "../components/Card";
+import SectionTitle from "../components/SectionTitle";
+import Button from "../components/Button";
 import customers from "../data/customers.json";
 import transactions from "../data/transactions.json";
 import { MdDownload, MdTrendingUp, MdPeople, MdRepeat, MdStar } from "react-icons/md";
@@ -22,53 +26,42 @@ export default function Reports() {
   return (
     <div>
       <PageHeader title="Laporan CRM" breadcrumb={["Dashboard", "Laporan"]}>
-        <button className="flex items-center bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-primary-dark transition">
-          <MdDownload className="mr-1 text-lg" /> Export Laporan
-        </button>
+        <Button type="primary">
+          <span className="flex items-center gap-1"><MdDownload className="text-lg" /> Export Laporan</span>
+        </Button>
       </PageHeader>
 
-      {/* KPI Cards */}
+      {/* KPI StatCards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[
-          { label: "Total Pelanggan Aktif", value: activeCount, icon: <MdPeople className="text-2xl text-primary" />, bg: "bg-primary-light" },
-          { label: "Pelanggan Tidak Aktif", value: inactiveCount, icon: <MdPeople className="text-2xl text-merah" />, bg: "bg-red-100" },
-          { label: "Tingkat Retensi", value: retention + "%", icon: <MdRepeat className="text-2xl text-hijau" />, bg: "bg-green-100" },
-          { label: "Total Pendapatan", value: "Rp " + (totalRevenue / 1000000).toFixed(1) + "jt", icon: <MdTrendingUp className="text-2xl text-kuning" />, bg: "bg-yellow-100" },
-        ].map((k, i) => (
-          <div key={i} className="bg-white rounded-2xl shadow-sm p-5 flex items-center space-x-4">
-            <div className={`${k.bg} p-3 rounded-xl`}>{k.icon}</div>
-            <div>
-              <p className="text-teks-samping text-xs">{k.label}</p>
-              <p className="text-2xl font-bold text-teks">{k.value}</p>
-            </div>
-          </div>
-        ))}
+        <StatCard label="Pelanggan Aktif" value={activeCount} icon={<MdPeople />} iconBg="bg-primary-light" iconColor="text-primary" />
+        <StatCard label="Tidak Aktif" value={inactiveCount} icon={<MdPeople />} iconBg="bg-red-100" iconColor="text-merah" />
+        <StatCard label="Tingkat Retensi" value={retention + "%"} icon={<MdRepeat />} iconBg="bg-green-100" iconColor="text-hijau" />
+        <StatCard label="Total Pendapatan" value={"Rp " + (totalRevenue / 1000000).toFixed(1) + "jt"} icon={<MdTrendingUp />} iconBg="bg-yellow-100" iconColor="text-kuning" />
       </div>
 
-      {/* Revenue Chart (CSS-based bar chart) */}
-      <div className="bg-white rounded-2xl shadow-sm p-5 mb-4">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="font-semibold text-teks">Pendapatan Bulanan</h3>
-          <span className="text-xs text-teks-samping">2026</span>
+      {/* Revenue Chart */}
+      <Card className="mb-4">
+        <SectionTitle title="Pendapatan Bulanan" subtitle="2026" />
+        <div className="flex items-end gap-3" style={{ height: 160 }}>
+          {monthlyData.map((d, i) => {
+            const barH = Math.round((d.revenue / maxRevenue) * 120);
+            return (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                <span className="text-xs text-teks-samping">Rp{(d.revenue / 1000000).toFixed(1)}jt</span>
+                <div
+                  className="w-full bg-primary hover:bg-primary-dark rounded-t-lg transition-all"
+                  style={{ height: barH }}
+                />
+                <span className="text-xs text-teks-samping">{d.month}</span>
+              </div>
+            );
+          })}
         </div>
-        <div className="flex items-end space-x-4 h-40">
-          {monthlyData.map((d, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center">
-              <span className="text-xs text-teks-samping mb-1">Rp{(d.revenue / 1000000).toFixed(1)}jt</span>
-              <div
-                className="w-full bg-primary rounded-t-lg transition-all hover:bg-primary-dark"
-                style={{ height: `${(d.revenue / maxRevenue) * 100}%` }}
-              />
-              <span className="text-xs text-teks-samping mt-2">{d.month}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      </Card>
 
-      {/* Service breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <h3 className="font-semibold text-teks mb-4">Layanan Terpopuler</h3>
+        <Card>
+          <SectionTitle title="Layanan Terpopuler" />
           {["Cuci Kering", "Cuci Setrika", "Dry Clean"].map(svc => {
             const count = transactions.filter(t => t.service === svc).length;
             const pct = Math.round((count / transactions.length) * 100);
@@ -84,13 +77,10 @@ export default function Reports() {
               </div>
             );
           })}
-        </div>
+        </Card>
 
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="flex items-center mb-4">
-            <MdStar className="text-kuning text-xl mr-2" />
-            <h3 className="font-semibold text-teks">Distribusi Loyalty</h3>
-          </div>
+        <Card>
+          <SectionTitle title="Distribusi Loyalty" action={<MdStar className="text-kuning text-xl" />} />
           {["Gold", "Silver", "Bronze"].map(tier => {
             const count = customers.filter(c => c.loyalty === tier).length;
             const pct = Math.round((count / customers.length) * 100);
@@ -107,7 +97,7 @@ export default function Reports() {
               </div>
             );
           })}
-        </div>
+        </Card>
       </div>
     </div>
   );

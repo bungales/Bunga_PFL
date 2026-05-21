@@ -14,6 +14,7 @@ const Loyalty = React.lazy(() => import("./pages/Loyalty"));
 const Segmentation = React.lazy(() => import("./pages/Segmentation"));
 const Feedback = React.lazy(() => import("./pages/Feedback"));
 const Reports = React.lazy(() => import("./pages/Reports"));
+const Components = React.lazy(() => import("./pages/Components"));
 const CustomerDetail = React.lazy(() => import("./pages/CustomerDetail"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/segmentation" element={<Segmentation />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/components" element={<Components />} />
         </Route>
 
         {/* Auth Layout - hanya untuk yang belum login */}

@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import {
   MdDashboard, MdPeople, MdReceipt, MdNotifications,
   MdStar, MdLocalLaundryService, MdBarChart, MdSegment,
-  MdFeedback, MdLogout
+  MdFeedback, MdLogout, MdWidgets
 } from "react-icons/md";
 
 const menuItems = [
@@ -15,6 +15,7 @@ const menuItems = [
   { id: "menu-segmentation", to: "/segmentation", label: "Segmentasi", icon: <MdSegment /> },
   { id: "menu-feedback", to: "/feedback", label: "Feedback", icon: <MdFeedback /> },
   { id: "menu-reports", to: "/reports", label: "Laporan CRM", icon: <MdBarChart /> },
+  { id: "menu-components", to: "/components", label: "Components", icon: <MdWidgets /> },
 ];
 
 const menuClass = ({ isActive }) =>

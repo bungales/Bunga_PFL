@@ -1,8 +1,13 @@
 import PageHeader from "../components/PageHeader";
+import Card from "../components/Card";
+import Badge from "../components/Badge";
+import Avatar from "../components/Avatar";
+import SectionTitle from "../components/SectionTitle";
+import ProgressBar from "../components/ProgressBar";
 import customers from "../data/customers.json";
 import { MdStar, MdEmojiEvents, MdCardGiftcard } from "react-icons/md";
 
-const loyaltyColor = { Gold: "text-kuning bg-yellow-100 border-yellow-200", Silver: "text-gray-500 bg-gray-100 border-gray-200", Bronze: "text-orange-500 bg-orange-100 border-orange-200" };
+const loyaltyType = { Gold: "gold", Silver: "silver", Bronze: "bronze" };
 const loyaltyIcon = { Gold: "🥇", Silver: "🥈", Bronze: "🥉" };
 
 const tiers = [
@@ -34,35 +39,44 @@ export default function Loyalty() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Leaderboard */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="flex items-center mb-4">
-            <MdEmojiEvents className="text-kuning text-2xl mr-2" />
-            <h3 className="font-semibold text-teks">Top Poin Pelanggan</h3>
-          </div>
-          <div className="space-y-3">
-            {sorted.map((c, i) => (
-              <div key={c.id} className="flex items-center space-x-3">
-                <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${i < 3 ? "bg-primary text-white" : "bg-latar text-teks-samping"}`}>{i + 1}</span>
-                <img src={`https://avatar.iran.liara.run/public/${c.id.slice(1)}`} className="w-8 h-8 rounded-full" alt="" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-teks">{c.name}</p>
-                  <div className="w-full bg-latar rounded-full h-1.5 mt-1">
-                    <div className="bg-primary h-1.5 rounded-full" style={{ width: `${Math.min((c.points / 2500) * 100, 100)}%` }} />
+        <Card>
+          <SectionTitle title="Top Poin Pelanggan" action={<MdEmojiEvents className="text-kuning text-2xl" />} />
+          <div className="space-y-4">
+            {sorted.map((c, i) => {
+              const nextTier = c.loyalty === "Bronze" ? 500 : c.loyalty === "Silver" ? 1000 : null;
+              const tierColor = c.loyalty === "Gold" ? "gold" : c.loyalty === "Silver" ? "primary" : "warning";
+              return (
+                <div key={c.id} className="flex items-start space-x-3">
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-1 ${i < 3 ? "bg-primary text-white" : "bg-latar text-teks-samping"}`}>{i + 1}</span>
+                  <Avatar src={`https://avatar.iran.liara.run/public/${c.id.slice(1)}`} name={c.name} size="sm" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-medium text-teks truncate">{c.name}</p>
+                      <div className="flex items-center gap-2 ml-2">
+                        <span className="text-sm font-bold text-primary whitespace-nowrap">{c.points} pts</span>
+                        <Badge type={loyaltyType[c.loyalty]}>{loyaltyIcon[c.loyalty]}</Badge>
+                      </div>
+                    </div>
+                    <ProgressBar
+                      value={c.points}
+                      max={nextTier ?? c.points}
+                      color={tierColor}
+                      size="sm"
+                      showPercent={false}
+                    />
+                    {nextTier && (
+                      <p className="text-xs text-teks-samping mt-0.5">{nextTier - c.points} poin lagi ke tier berikutnya</p>
+                    )}
                   </div>
                 </div>
-                <span className="text-sm font-bold text-primary">{c.points} pts</span>
-                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${loyaltyColor[c.loyalty]}`}>{loyaltyIcon[c.loyalty]}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
-        </div>
+        </Card>
 
         {/* Rewards */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <div className="flex items-center mb-4">
-            <MdCardGiftcard className="text-primary text-2xl mr-2" />
-            <h3 className="font-semibold text-teks">Daftar Reward</h3>
-          </div>
+        <Card>
+          <SectionTitle title="Daftar Reward" action={<MdCardGiftcard className="text-primary text-2xl" />} />
           <div className="space-y-3">
             {[
               { reward: "Diskon 10%", points: 200, icon: "🎫" },
@@ -80,7 +94,7 @@ export default function Loyalty() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

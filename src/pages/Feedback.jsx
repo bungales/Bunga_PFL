@@ -1,5 +1,9 @@
 import { useState } from "react";
 import PageHeader from "../components/PageHeader";
+import Card from "../components/Card";
+import SectionTitle from "../components/SectionTitle";
+import Badge from "../components/Badge";
+import Accordion from "../components/Accordion";
 import { MdStar, MdStarBorder } from "react-icons/md";
 
 const initialFeedback = [
@@ -34,15 +38,15 @@ export default function Feedback() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
         {/* Average */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center justify-center">
+        <Card className="flex flex-col items-center justify-center text-center">
           <p className="text-6xl font-bold text-primary">{avg}</p>
           <Stars rating={Math.round(avg)} />
           <p className="text-teks-samping text-sm mt-2">{feedbacks.length} ulasan</p>
-        </div>
+        </Card>
 
         {/* Distribution */}
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-5">
-          <h3 className="font-semibold text-teks mb-4">Distribusi Rating</h3>
+        <Card className="lg:col-span-2">
+          <SectionTitle title="Distribusi Rating" />
           <div className="space-y-2">
             {dist.map(({ r, count }) => (
               <div key={r} className="flex items-center space-x-3">
@@ -55,11 +59,11 @@ export default function Feedback() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm p-5">
-        <h3 className="font-semibold text-teks mb-4">Semua Ulasan</h3>
+      <Card>
+        <SectionTitle title="Semua Ulasan" subtitle={`${feedbacks.length} ulasan pelanggan`} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {feedbacks.map(f => (
             <div key={f.id} className="border border-garis rounded-xl p-4 hover:bg-latar transition">
@@ -68,13 +72,42 @@ export default function Feedback() {
                   <p className="font-medium text-teks text-sm">{f.customer}</p>
                   <p className="text-xs text-teks-samping">{f.service} · {f.date}</p>
                 </div>
-                <Stars rating={f.rating} />
+                <div className="flex items-center gap-2">
+                  <Stars rating={f.rating} />
+                  <Badge type={f.rating >= 4 ? "success" : f.rating === 3 ? "warning" : "danger"}>
+                    {f.rating}/5
+                  </Badge>
+                </div>
               </div>
               <p className="text-sm text-teks-samping italic">"{f.comment}"</p>
             </div>
           ))}
         </div>
-      </div>
+      </Card>
+
+      {/* FAQ Accordion */}
+      <Card>
+        <SectionTitle title="FAQ Layanan" subtitle="Pertanyaan yang sering ditanyakan pelanggan" />
+        <Accordion items={[
+          {
+            title: "Berapa lama proses laundry?",
+            content: "Layanan reguler selesai dalam 1–2 hari kerja. Layanan express selesai dalam 6 jam dengan biaya tambahan.",
+            defaultOpen: true,
+          },
+          {
+            title: "Bagaimana jika pakaian saya rusak atau hilang?",
+            content: "Kami bertanggung jawab penuh atas kerusakan atau kehilangan yang disebabkan oleh kelalaian kami. Ganti rugi maksimal 10x harga cuci.",
+          },
+          {
+            title: "Apakah bisa request parfum tertentu?",
+            content: "Bisa! Kami menyediakan beberapa pilihan parfum. Sampaikan preferensi Anda saat antar laundry.",
+          },
+          {
+            title: "Bagaimana cara memberikan feedback?",
+            content: "Anda bisa memberikan rating dan komentar langsung melalui aplikasi setelah transaksi berstatus Selesai.",
+          },
+        ]} />
+      </Card>
     </div>
   );
 }

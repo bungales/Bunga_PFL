@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
+import Button from "../components/Button";
+import Badge from "../components/Badge";
+import Avatar from "../components/Avatar";
+import SearchBar from "../components/SearchBar";
+import Modal from "../components/Modal";
+import InputField from "../components/InputField";
+import SelectField from "../components/SelectField";
+import Table from "../components/Table";
+import Toast from "../components/Toast";
+import EmptyState from "../components/EmptyState";
 import customersData from "../data/customers.json";
-import { MdSearch, MdAdd, MdEdit, MdDelete, MdClose, MdVisibility } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdVisibility, MdPeople } from "react-icons/md";
 
-const loyaltyColor = { Gold: "text-kuning bg-yellow-100", Silver: "text-gray-500 bg-gray-100", Bronze: "text-orange-500 bg-orange-100" };
-const statusColor = { active: "text-hijau bg-green-100", inactive: "text-merah bg-red-100" };
-
+const loyaltyType = { Gold: "gold", Silver: "silver", Bronze: "bronze" };
+const statusType = { active: "success", inactive: "danger" };
 const emptyForm = { name: "", email: "", phone: "", loyalty: "Bronze" };
 
 export default function Customers() {
@@ -15,6 +24,9 @@ export default function Customers() {
   const [showModal, setShowModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [form, setForm] = useState(emptyForm);
+  const [toast, setToast] = useState({ show: false, type: "success", message: "" });
+
+  const showToast = (type, message) => setToast({ show: true, type, message });
 
   const filtered = customers.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -23,15 +35,23 @@ export default function Customers() {
 
   const openAdd = () => { setForm(emptyForm); setEditData(null); setShowModal(true); };
   const openEdit = (c) => { setForm({ name: c.name, email: c.email, phone: c.phone, loyalty: c.loyalty }); setEditData(c); setShowModal(true); };
-  const handleDelete = (id) => { if (confirm("Hapus pelanggan ini?")) setCustomers(prev => prev.filter(c => c.id !== id)); };
+
+  const handleDelete = (id) => {
+    if (confirm("Hapus pelanggan ini?")) {
+      setCustomers(prev => prev.filter(c => c.id !== id));
+      showToast("success", "Pelanggan berhasil dihapus.");
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (editData) {
       setCustomers(prev => prev.map(c => c.id === editData.id ? { ...c, ...form } : c));
+      showToast("success", "Data pelanggan berhasil diperbarui.");
     } else {
       const newC = { ...form, id: "C" + (customers.length + 1).toString().padStart(3, "0"), points: 0, lastTransaction: "-", totalSpent: 0, status: "active" };
       setCustomers(prev => [...prev, newC]);
+      showToast("success", "Pelanggan baru berhasil ditambahkan.");
     }
     setShowModal(false);
   };
@@ -39,97 +59,85 @@ export default function Customers() {
   return (
     <div>
       <PageHeader title="Manajemen Pelanggan" breadcrumb={["Dashboard", "Pelanggan"]}>
-        <button onClick={openAdd} className="flex items-center bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-primary-dark transition">
-          <MdAdd className="mr-1 text-lg" /> Tambah Pelanggan
-        </button>
+        <Button type="primary" onClick={openAdd}>
+          <span className="flex items-center gap-1"><MdAdd className="text-lg" /> Tambah Pelanggan</span>
+        </Button>
       </PageHeader>
 
       <div className="bg-white rounded-2xl shadow-sm p-5">
-        {/* Search */}
-        <div className="relative mb-4 max-w-sm">
-          <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-teks-samping text-lg" />
-          <input
-            type="text" placeholder="Cari nama atau telepon..."
-            value={search} onChange={e => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 border border-garis rounded-xl text-sm w-full outline-none focus:border-primary bg-latar"
+        <div className="mb-4">
+          <SearchBar
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            onClear={() => setSearch("")}
+            placeholder="Cari nama atau telepon..."
           />
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-teks-samping text-xs border-b border-garis">
-                <th className="text-left pb-3 font-medium">Pelanggan</th>
-                <th className="text-left pb-3 font-medium">Telepon</th>
-                <th className="text-left pb-3 font-medium">Loyalty</th>
-                <th className="text-left pb-3 font-medium">Poin</th>
-                <th className="text-left pb-3 font-medium">Total Belanja</th>
-                <th className="text-left pb-3 font-medium">Status</th>
-                <th className="text-left pb-3 font-medium">Aksi</th>
+        {filtered.length === 0 ? (
+          <EmptyState
+            icon={<MdPeople />}
+            title="Pelanggan tidak ditemukan"
+            description="Coba ubah kata kunci pencarian atau tambah pelanggan baru."
+            action={<Button type="primary" onClick={openAdd}>Tambah Pelanggan</Button>}
+          />
+        ) : (
+          <Table headers={["Pelanggan", "Telepon", "Loyalty", "Poin", "Total Belanja", "Status", "Aksi"]}>
+            {filtered.map((c) => (
+              <tr key={c.id} className="border-b border-garis last:border-0 hover:bg-latar transition">
+                <td className="py-3">
+                  <div className="flex items-center space-x-3">
+                    <Avatar
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=2563eb&color=fff&size=64`}
+                      name={c.name}
+                      size="sm"
+                    />
+                    <div>
+                      <Link to={`/customers/${c.id}`} className="font-medium text-teks hover:text-primary hover:underline">{c.name}</Link>
+                      <p className="text-xs text-teks-samping">{c.email}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="py-3 text-teks-samping text-sm">{c.phone}</td>
+                <td className="py-3"><Badge type={loyaltyType[c.loyalty]}>{c.loyalty}</Badge></td>
+                <td className="py-3 font-semibold text-primary text-sm">{c.points}</td>
+                <td className="py-3 font-medium text-teks text-sm">Rp {c.totalSpent.toLocaleString()}</td>
+                <td className="py-3"><Badge type={statusType[c.status]}>{c.status === "active" ? "Aktif" : "Tidak Aktif"}</Badge></td>
+                <td className="py-3">
+                  <div className="flex space-x-2">
+                    <Link to={`/customers/${c.id}`}>
+                      <Button type="success" size="sm"><MdVisibility /></Button>
+                    </Link>
+                    <Button type="primary" size="sm" onClick={() => openEdit(c)}><MdEdit /></Button>
+                    <Button type="danger" size="sm" onClick={() => handleDelete(c.id)}><MdDelete /></Button>
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filtered.map((c) => (
-                <tr key={c.id} className="border-b border-garis last:border-0 hover:bg-latar transition">
-                  <td className="py-3">
-                    <div className="flex items-center space-x-3">
-                      <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=3b82f6&color=fff&size=64`} className="w-8 h-8 rounded-full" alt={c.name} />
-                      <div>
-                        <Link to={`/customers/${c.id}`} className="font-medium text-teks hover:text-primary hover:underline">{c.name}</Link>
-                        <p className="text-xs text-teks-samping">{c.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-3 text-teks-samping">{c.phone}</td>
-                  <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${loyaltyColor[c.loyalty]}`}>{c.loyalty}</span></td>
-                  <td className="py-3 font-semibold text-primary">{c.points}</td>
-                  <td className="py-3 font-medium text-teks">Rp {c.totalSpent.toLocaleString()}</td>
-                  <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor[c.status]}`}>{c.status === "active" ? "Aktif" : "Tidak Aktif"}</span></td>
-                  <td className="py-3">
-                    <div className="flex space-x-2">
-                      <Link to={`/customers/${c.id}`} className="p-1.5 bg-green-100 text-hijau rounded-lg hover:bg-green-200 transition" title="Lihat Detail"><MdVisibility /></Link>
-                      <button onClick={() => openEdit(c)} className="p-1.5 bg-primary-light text-primary rounded-lg hover:bg-blue-200 transition"><MdEdit /></button>
-                      <button onClick={() => handleDelete(c.id)} className="p-1.5 bg-red-100 text-merah rounded-lg hover:bg-red-200 transition"><MdDelete /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </Table>
+        )}
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-semibold text-teks text-lg">{editData ? "Edit Pelanggan" : "Tambah Pelanggan"}</h3>
-              <button onClick={() => setShowModal(false)} className="text-teks-samping hover:text-teks"><MdClose className="text-xl" /></button>
-            </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {["name", "email", "phone"].map(field => (
-                <div key={field}>
-                  <label className="block text-sm font-medium text-teks mb-1 capitalize">{field === "name" ? "Nama" : field === "email" ? "Email" : "Telepon"}</label>
-                  <input type="text" value={form[field]} onChange={e => setForm({ ...form, [field]: e.target.value })}
-                    className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar" required />
-                </div>
-              ))}
-              <div>
-                <label className="block text-sm font-medium text-teks mb-1">Loyalty</label>
-                <select value={form.loyalty} onChange={e => setForm({ ...form, loyalty: e.target.value })}
-                  className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar">
-                  <option>Bronze</option><option>Silver</option><option>Gold</option>
-                </select>
-              </div>
-              <div className="flex space-x-3 pt-2">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-2 border border-garis rounded-xl text-sm text-teks-samping hover:bg-latar transition">Batal</button>
-                <button type="submit" className="flex-1 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-dark transition">Simpan</button>
-              </div>
-            </form>
+      {/* Modal Tambah/Edit */}
+      <Modal show={showModal} onClose={() => setShowModal(false)} title={editData ? "Edit Pelanggan" : "Tambah Pelanggan"}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <InputField label="Nama" placeholder="Nama lengkap" value={form.name}
+            onChange={e => setForm({ ...form, name: e.target.value })} required />
+          <InputField label="Email" type="email" placeholder="email@domain.com" value={form.email}
+            onChange={e => setForm({ ...form, email: e.target.value })} required />
+          <InputField label="Telepon" placeholder="08xxxxxxxxxx" value={form.phone}
+            onChange={e => setForm({ ...form, phone: e.target.value })} required />
+          <SelectField label="Loyalty" value={form.loyalty}
+            onChange={e => setForm({ ...form, loyalty: e.target.value })}
+            options={["Bronze", "Silver", "Gold"]} />
+          <div className="flex gap-3 pt-2">
+            <Button type="secondary" className="flex-1" onClick={() => setShowModal(false)}>Batal</Button>
+            <Button type="primary" className="flex-1">Simpan</Button>
           </div>
-        </div>
-      )}
+        </form>
+      </Modal>
+
+      <Toast show={toast.show} type={toast.type} message={toast.message} onClose={() => setToast(t => ({ ...t, show: false }))} />
     </div>
   );
 }

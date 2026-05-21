@@ -1,6 +1,14 @@
 import { useState } from "react";
 import PageHeader from "../components/PageHeader";
-import { MdWhatsapp, MdSms, MdAdd, MdClose, MdSend } from "react-icons/md";
+import Button from "../components/Button";
+import Badge from "../components/Badge";
+import Modal from "../components/Modal";
+import InputField from "../components/InputField";
+import SelectField from "../components/SelectField";
+import Alert from "../components/Alert";
+import Toast from "../components/Toast";
+import SectionTitle from "../components/SectionTitle";
+import { MdWhatsapp, MdSms, MdAdd, MdSend } from "react-icons/md";
 
 const initialNotifs = [
   { id: 1, customer: "Andi Pratama", phone: "081234567890", message: "Cucian Anda sudah selesai dan siap diambil!", type: "WhatsApp", time: "10:30", status: "Terkirim" },
@@ -11,12 +19,14 @@ const initialNotifs = [
 ];
 
 const typeIcon = { WhatsApp: <MdWhatsapp className="text-hijau text-xl" />, SMS: <MdSms className="text-primary text-xl" /> };
-const statusColor = { Terkirim: "text-hijau bg-green-100", Pending: "text-kuning bg-yellow-100" };
+const statusType = { Terkirim: "success", Pending: "warning" };
 
 export default function Notifications() {
   const [notifs, setNotifs] = useState(initialNotifs);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ customer: "", phone: "", message: "", type: "WhatsApp" });
+  const [alert, setAlert] = useState(false);
+  const [toast, setToast] = useState({ show: false, type: "success", message: "" });
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -27,31 +37,39 @@ export default function Notifications() {
     }, ...prev]);
     setShowModal(false);
     setForm({ customer: "", phone: "", message: "", type: "WhatsApp" });
+    setAlert(true);
+    setToast({ show: true, type: "success", message: `Notifikasi berhasil dikirim ke ${form.customer}.` });
   };
 
   return (
     <div>
       <PageHeader title="Notifikasi Otomatis" breadcrumb={["Dashboard", "Notifikasi"]}>
-        <button onClick={() => setShowModal(true)} className="flex items-center bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-primary-dark transition">
-          <MdAdd className="mr-1 text-lg" /> Kirim Notifikasi
-        </button>
+        <Button type="primary" onClick={() => setShowModal(true)}>
+          <span className="flex items-center gap-1"><MdAdd className="text-lg" /> Kirim Notifikasi</span>
+        </Button>
       </PageHeader>
+
+      {alert && (
+        <div className="mb-4">
+          <Alert type="success" message="Notifikasi berhasil dikirim ke pelanggan." onClose={() => setAlert(false)} />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {[
-          { label: "Total Terkirim", value: notifs.filter(n => n.status === "Terkirim").length, color: "text-hijau" },
-          { label: "Via WhatsApp", value: notifs.filter(n => n.type === "WhatsApp").length, color: "text-hijau" },
-          { label: "Via SMS", value: notifs.filter(n => n.type === "SMS").length, color: "text-primary" },
+          { label: "Total Terkirim", value: notifs.filter(n => n.status === "Terkirim").length, type: "success" },
+          { label: "Via WhatsApp", value: notifs.filter(n => n.type === "WhatsApp").length, type: "primary" },
+          { label: "Via SMS", value: notifs.filter(n => n.type === "SMS").length, type: "primary" },
         ].map((s, i) => (
           <div key={i} className="bg-white rounded-2xl shadow-sm p-4">
             <p className="text-teks-samping text-sm">{s.label}</p>
-            <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
+            <p className="text-3xl font-bold text-teks">{s.value}</p>
           </div>
         ))}
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm p-5">
-        <h3 className="font-semibold text-teks mb-4">Riwayat Notifikasi</h3>
+        <SectionTitle title="Riwayat Notifikasi" subtitle={`${notifs.length} notifikasi terkirim`} />
         <div className="space-y-3">
           {notifs.map(n => (
             <div key={n.id} className="flex items-start space-x-4 p-4 border border-garis rounded-xl hover:bg-latar transition">
@@ -59,7 +77,7 @@ export default function Notifications() {
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <p className="font-medium text-teks text-sm">{n.customer}</p>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${statusColor[n.status]}`}>{n.status}</span>
+                  <Badge type={statusType[n.status]}>{n.status}</Badge>
                 </div>
                 <p className="text-xs text-teks-samping mt-0.5">{n.phone} · {n.type} · {n.time}</p>
                 <p className="text-sm text-teks mt-1">{n.message}</p>
@@ -69,46 +87,31 @@ export default function Notifications() {
         </div>
       </div>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-semibold text-teks text-lg">Kirim Notifikasi</h3>
-              <button onClick={() => setShowModal(false)}><MdClose className="text-xl text-teks-samping" /></button>
-            </div>
-            <form onSubmit={handleSend} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-teks mb-1">Nama Pelanggan</label>
-                <input type="text" value={form.customer} onChange={e => setForm({ ...form, customer: e.target.value })}
-                  className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar" required />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-teks mb-1">Nomor Telepon</label>
-                <input type="text" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar" required />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-teks mb-1">Media</label>
-                <select value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}
-                  className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar">
-                  <option>WhatsApp</option><option>SMS</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-teks mb-1">Pesan</label>
-                <textarea rows={3} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
-                  className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar resize-none" required />
-              </div>
-              <div className="flex space-x-3 pt-2">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-2 border border-garis rounded-xl text-sm text-teks-samping hover:bg-latar transition">Batal</button>
-                <button type="submit" className="flex-1 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-dark transition flex items-center justify-center">
-                  <MdSend className="mr-1" /> Kirim
-                </button>
-              </div>
-            </form>
+      <Modal show={showModal} onClose={() => setShowModal(false)} title="Kirim Notifikasi">
+        <form onSubmit={handleSend} className="space-y-4">
+          <InputField label="Nama Pelanggan" placeholder="Nama pelanggan" value={form.customer}
+            onChange={e => setForm({ ...form, customer: e.target.value })} required />
+          <InputField label="Nomor Telepon" placeholder="08xxxxxxxxxx" value={form.phone}
+            onChange={e => setForm({ ...form, phone: e.target.value })} required />
+          <SelectField label="Media" value={form.type}
+            onChange={e => setForm({ ...form, type: e.target.value })}
+            options={["WhatsApp", "SMS"]} />
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-teks">Pesan <span className="text-merah">*</span></label>
+            <textarea rows={3} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
+              className="w-full px-4 py-2 border border-garis rounded-xl text-sm outline-none focus:border-primary bg-latar resize-none" required />
           </div>
-        </div>
-      )}
+          <div className="flex gap-3 pt-2">
+            <Button type="secondary" className="flex-1" onClick={() => setShowModal(false)}>Batal</Button>
+            <Button type="primary" className="flex-1">
+              <span className="flex items-center justify-center gap-1"><MdSend /> Kirim</span>
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Toast show={toast.show} type={toast.type} message={toast.message}
+        onClose={() => setToast(t => ({ ...t, show: false }))} />
     </div>
   );
 }

@@ -1,9 +1,13 @@
 import PageHeader from "../components/PageHeader";
+import Card from "../components/Card";
+import Badge from "../components/Badge";
+import SectionTitle from "../components/SectionTitle";
+import EmptyState from "../components/EmptyState";
 import transactionsData from "../data/transactions.json";
-import { MdCheckCircle, MdRadioButtonUnchecked } from "react-icons/md";
+import { MdCheckCircle, MdRadioButtonUnchecked, MdLocalLaundryService } from "react-icons/md";
 
 const steps = ["Diterima", "Dicuci", "Dikeringkan", "Disetrika", "Selesai", "Diambil"];
-const statusColor = { Selesai: "text-hijau bg-green-100", Proses: "text-primary bg-primary-light", Menunggu: "text-kuning bg-yellow-100" };
+const statusType = { Selesai: "success", Proses: "primary", Menunggu: "warning" };
 
 function TrackingBar({ current }) {
   const idx = steps.indexOf(current);
@@ -32,20 +36,28 @@ export default function Tracking() {
   return (
     <div>
       <PageHeader title="Tracking Status Laundry" breadcrumb={["Dashboard", "Tracking"]} />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {active.map(t => (
-          <div key={t.id} className="bg-white rounded-2xl shadow-sm p-5">
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <p className="font-semibold text-teks">{t.customerName}</p>
-                <p className="text-xs text-teks-samping">{t.id} · {t.service} · {t.weight} kg</p>
+      {active.length === 0 ? (
+        <EmptyState
+          icon={<MdLocalLaundryService />}
+          title="Tidak ada laundry aktif"
+          description="Semua laundry sudah selesai diproses."
+        />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {active.map(t => (
+            <Card key={t.id}>
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="font-semibold text-teks">{t.customerName}</p>
+                  <p className="text-xs text-teks-samping">{t.id} · {t.service} · {t.weight} kg</p>
+                </div>
+                <Badge type={statusType[t.status]}>{t.status}</Badge>
               </div>
-              <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusColor[t.status]}`}>{t.status}</span>
-            </div>
-            <TrackingBar current={t.trackingStatus} />
-          </div>
-        ))}
-      </div>
+              <TrackingBar current={t.trackingStatus} />
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
