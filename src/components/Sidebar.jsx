@@ -31,12 +31,11 @@ export default function Sidebar() {
       
       {/* Logo Section - Sekarang Menggunakan Gambar Asli */}
       <div id="sidebar-logo" className="px-6 py-8 flex items-center gap-3">
-        <div className="w-12 h-12 flex items-center justify-center overflow-hidden rounded-xl shadow-md">
-           {/* Mengarahkan ke file logo di folder public/img/ */}
+        <div className="w-10 h-10 flex items-center justify-center overflow-hidden rounded-xl shadow-md bg-white flex-shrink-0">
            <img 
              src="/img/logo Netto loundry.jpeg" 
              alt="Netto Laundry Logo" 
-             className="w-full h-full object-cover"
+             className="w-full h-full object-contain"
            />
         </div>
         <h1 className="text-xl font-bold tracking-tight text-[#202224]">
