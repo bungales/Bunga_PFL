@@ -1,10 +1,13 @@
+import { forwardRef } from "react";
 import { MdSearch, MdClose } from "react-icons/md";
 
-export default function SearchBar({ value, onChange, placeholder = "Cari...", onClear }) {
+// forwardRef agar parent bisa akses DOM input via useRef
+const SearchBar = forwardRef(function SearchBar({ value, onChange, placeholder = "Cari...", onClear }, ref) {
   return (
     <div className="relative max-w-sm">
       <MdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-teks-samping text-lg" />
       <input
+        ref={ref}
         type="text"
         placeholder={placeholder}
         value={value}
@@ -18,4 +21,6 @@ export default function SearchBar({ value, onChange, placeholder = "Cari...", on
       )}
     </div>
   );
-}
+});
+
+export default SearchBar;

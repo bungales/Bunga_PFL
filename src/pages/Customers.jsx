@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 import Button from "../components/Button";
@@ -25,6 +25,17 @@ export default function Customers() {
   const [editData, setEditData] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [toast, setToast] = useState({ show: false, type: "success", message: "" });
+
+  // useRef: menyimpan referensi ke elemen DOM input pencarian
+  // tidak menyebabkan re-render saat nilainya berubah, berbeda dengan useState
+  const searchRef = useRef(null);
+
+  // useEffect: auto-focus ke input pencarian saat halaman Customers pertama kali dibuka
+  useEffect(() => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, []); // dependency array [] → hanya berjalan sekali saat mount
 
   const showToast = (type, message) => setToast({ show: true, type, message });
 
@@ -67,6 +78,7 @@ export default function Customers() {
       <div className="bg-white rounded-2xl shadow-sm p-5">
         <div className="mb-4">
           <SearchBar
+            ref={searchRef}
             value={search}
             onChange={e => setSearch(e.target.value)}
             onClear={() => setSearch("")}

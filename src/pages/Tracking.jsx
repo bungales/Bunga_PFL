@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react";
 import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import SectionTitle from "../components/SectionTitle";
 import EmptyState from "../components/EmptyState";
 import transactionsData from "../data/transactions.json";
-import { MdCheckCircle, MdRadioButtonUnchecked, MdLocalLaundryService } from "react-icons/md";
+import { MdCheckCircle, MdRadioButtonUnchecked, MdLocalLaundryService, MdRefresh } from "react-icons/md";
 
 const steps = ["Diterima", "Dicuci", "Dikeringkan", "Disetrika", "Selesai", "Diambil"];
 const statusType = { Selesai: "success", Proses: "primary", Menunggu: "warning" };
@@ -33,9 +34,35 @@ function TrackingBar({ current }) {
 export default function Tracking() {
   const active = transactionsData.filter(t => t.status !== "Selesai" || t.trackingStatus !== "Diambil").slice(0, 8);
 
+  // useEffect: menjalankan side effect untuk update waktu terakhir refresh
+  // dependency array kosong [] → hanya berjalan sekali saat komponen pertama kali dimount
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    // Set waktu pertama kali halaman dibuka
+    setLastUpdated(new Date().toLocaleTimeString("id-ID"));
+
+    // Interval tiap 30 detik update timestamp (simulasi polling status laundry)
+    const interval = setInterval(() => {
+      setLastUpdated(new Date().toLocaleTimeString("id-ID"));
+    }, 30000);
+
+    // Cleanup: hentikan interval saat komponen di-unmount agar tidak memory leak
+    return () => clearInterval(interval);
+  }, []); // dependency array kosong → efek hanya berjalan sekali saat mount
+
   return (
     <div>
       <PageHeader title="Tracking Status Laundry" breadcrumb={["Dashboard", "Tracking"]} />
+
+      {/* Indikator last updated dari useEffect */}
+      {lastUpdated && (
+        <div className="flex items-center gap-2 text-xs text-teks-samping mb-4">
+          <MdRefresh className="text-primary" />
+          <span>Data diperbarui otomatis · Terakhir diperbarui: <strong className="text-primary">{lastUpdated}</strong></span>
+        </div>
+      )}
+
       {active.length === 0 ? (
         <EmptyState
           icon={<MdLocalLaundryService />}
