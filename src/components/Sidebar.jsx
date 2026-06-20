@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import {
   MdDashboard, MdPeople, MdReceipt, MdNotifications,
   MdStar, MdLocalLaundryService, MdBarChart, MdSegment,
-  MdFeedback, MdLogout, MdWidgets
+  MdFeedback, MdLogout, MdWidgets, MdManageAccounts
 } from "react-icons/md";
 
 const menuItems = [
@@ -15,6 +15,7 @@ const menuItems = [
   { id: "menu-segmentation", to: "/segmentation", label: "Segmentasi", icon: <MdSegment /> },
   { id: "menu-feedback", to: "/feedback", label: "Feedback", icon: <MdFeedback /> },
   { id: "menu-reports", to: "/reports", label: "Laporan CRM", icon: <MdBarChart /> },
+  { id: "menu-users", to: "/users", label: "Users", icon: <MdManageAccounts /> },
   { id: "menu-components", to: "/components", label: "Components", icon: <MdWidgets /> },
 ];
 
@@ -95,8 +96,12 @@ export default function Sidebar() {
         </div>
         
         <button
-          onClick={() => {
+          onClick={async () => {
+            const { supabase } = await import("../services/supabase");
+            await supabase.auth.signOut();
             localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("userId");
+            localStorage.removeItem("userEmail");
             window.location.href = "/login";
           }}
           className="w-full flex items-center px-4 py-2 text-gray-500 hover:text-merah text-sm font-medium transition-all rounded-xl hover:bg-red-50 group"

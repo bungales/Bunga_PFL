@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { usersAPI } from "../../services/usersAPI";
 import { BsFillExclamationDiamondFill } from "react-icons/bs";
 import { ImSpinner2 } from "react-icons/im";
 
@@ -19,21 +19,17 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    axios
-      .post("https://dummyjson.com/user/login", {
-        username: dataForm.email,
-        password: dataForm.password,
-      })
-      .then((res) => {
-        if (res.status !== 200) { setError(res.data.message); return; }
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userName", res.data.firstName + " " + res.data.lastName);
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err.response?.data?.message || err.message || "Username atau password salah");
-      })
-      .finally(() => setLoading(false));
+    try {
+      const data = await usersAPI.login(dataForm.email, dataForm.password);
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userId", data.user.id);
+      localStorage.setItem("userEmail", data.user.email);
+      navigate("/");
+    } catch (err) {
+      setError(err.message || "Email atau password salah");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,11 +50,12 @@ export default function Login() {
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-teks mb-1">Username</label>
+          <label className="block text-sm font-medium text-teks mb-1">Email</label>
           <input
-            type="text" name="email" placeholder="Masukkan username"
+            type="email" name="email" placeholder="email@domain.com"
             onChange={handleChange} value={dataForm.email}
             className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
+            required
           />
         </div>
         <div className="mb-6">
@@ -67,6 +64,7 @@ export default function Login() {
             type="password" name="password" placeholder="••••••••"
             onChange={handleChange} value={dataForm.password}
             className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
+            required
           />
         </div>
         <button type="submit" disabled={loading}
@@ -78,11 +76,6 @@ export default function Login() {
       <div className="flex justify-between mt-4 text-sm">
         <Link to="/forgot" className="text-primary hover:underline">Lupa password?</Link>
         <Link to="/register" className="text-primary hover:underline">Daftar akun</Link>
-      </div>
-
-      {/* Hint credentials */}
-      <div className="mt-5 p-3 bg-latar rounded-xl border border-garis text-xs text-teks-samping text-center">
-        Demo: username <span className="font-semibold text-primary">emilys</span> · password <span className="font-semibold text-primary">emilyspass</span>
       </div>
     </div>
   );
