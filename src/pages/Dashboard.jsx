@@ -6,7 +6,7 @@ import SectionTitle from "../components/SectionTitle";
 import Card from "../components/Card";
 import Badge from "../components/Badge";
 import Button from "../components/Button";
-import { MdPeople, MdReceipt, MdTrendingUp, MdHistory, MdInfo, MdCheckCircle } from "react-icons/md";
+import { MdPeople, MdReceipt, MdTrendingUp, MdHistory, MdCheckCircle } from "react-icons/md";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer
@@ -14,7 +14,6 @@ import {
 import customers from "../data/customers.json";
 import transactions from "../data/transactions.json";
 
-// Shadcn components
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent
@@ -67,63 +66,105 @@ export default function Dashboard() {
       <div className="space-y-6">
         <PageHeader title="Dashboard" breadcrumb={["Dashboard"]} />
 
-        {/* Shadcn Alert - info sistem */}
-        <Alert>
-          <MdCheckCircle className="text-green-500" />
-          <AlertTitle>Sistem Berjalan Normal</AlertTitle>
-          <AlertDescription>
+        {/* Alert */}
+        <Alert className="border-green-200 bg-green-50">
+          <MdCheckCircle className="text-green-500 text-lg" />
+          <AlertTitle className="text-green-800 font-semibold ml-1">Sistem Berjalan Normal</AlertTitle>
+          <AlertDescription className="text-green-600 ml-1">
             Semua layanan laundry aktif. Data diperbarui secara real-time.
           </AlertDescription>
         </Alert>
 
-        {/* StatCard dengan Tooltip */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Stat Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {stats.map((s, i) => (
             <Tooltip key={i}>
               <TooltipTrigger asChild>
-                <div>
+                <div className="cursor-default">
                   <StatCard {...s} />
                 </div>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent side="bottom" className="text-xs">
                 <p>Trend: {s.isUp ? "↑" : "↓"} {s.trend} dari bulan lalu</p>
               </TooltipContent>
             </Tooltip>
           ))}
         </div>
 
-        {/* Grafik */}
-        <Card>
-          <SectionTitle
-            title="Sales Details"
-            action={
-              <select className="border border-garis text-sm rounded-lg px-3 py-1.5 text-teks-samping outline-none bg-latar">
-                <option>Oktober</option>
-              </select>
-            }
-          />
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f1f1f1" />
-                <XAxis dataKey="x" axisLine={false} tickLine={false} tick={{ fill: '#a3aed0', fontSize: 12 }} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#a3aed0', fontSize: 12 }} tickFormatter={(v) => `${v}%`} />
-                <RechartsTooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }} />
-                <Area type="monotone" dataKey="y" stroke="#2563eb" strokeWidth={3}
-                  fillOpacity={1} fill="url(#colorSales)"
-                  dot={{ r: 4, fill: "#2563eb", strokeWidth: 2, stroke: "#fff" }}
-                  activeDot={{ r: 6, fill: "#2563eb" }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+        {/* Chart + Transaksi side by side on large screens */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+
+          {/* Grafik - lebih lebar */}
+          <div className="xl:col-span-2">
+            <Card>
+              <SectionTitle
+                title="Sales Details"
+                action={
+                  <select className="border border-garis text-sm rounded-lg px-3 py-1.5 text-teks-samping outline-none bg-latar focus:border-primary transition">
+                    <option>Oktober</option>
+                  </select>
+                }
+              />
+              <div className="h-[280px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#2563eb" stopOpacity={0.12} />
+                        <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="0" vertical={false} stroke="#f3f4f6" />
+                    <XAxis dataKey="x" axisLine={false} tickLine={false} tick={{ fill: '#a3aed0', fontSize: 11 }} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#a3aed0', fontSize: 11 }} tickFormatter={(v) => `${v}%`} />
+                    <RechartsTooltip
+                      contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', fontSize: '12px' }}
+                      cursor={{ stroke: '#2563eb', strokeWidth: 1, strokeDasharray: '4 4' }}
+                    />
+                    <Area type="monotone" dataKey="y" stroke="#2563eb" strokeWidth={2.5}
+                      fillOpacity={1} fill="url(#colorSales)"
+                      dot={{ r: 3.5, fill: "#2563eb", strokeWidth: 2, stroke: "#fff" }}
+                      activeDot={{ r: 5.5, fill: "#2563eb", stroke: "#fff", strokeWidth: 2 }}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
           </div>
-        </Card>
+
+          {/* Info Layanan - lebih sempit */}
+          <div className="xl:col-span-1">
+            <Card className="h-full">
+              <SectionTitle title="Info Layanan" subtitle="FAQ layanan laundry" />
+              <Accordion type="single" collapsible className="mt-1">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-sm text-teks hover:text-primary transition-colors">
+                    Berapa lama proses reguler?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs text-teks-samping leading-relaxed">
+                    Proses laundry reguler membutuhkan waktu 2–3 hari kerja tergantung antrian dan jenis pakaian.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger className="text-sm text-teks hover:text-primary transition-colors">
+                    Tersedia layanan express?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs text-teks-samping leading-relaxed">
+                    Ya, layanan express tersedia dengan estimasi selesai 6–8 jam. Biaya tambahan berlaku.
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3">
+                  <AccordionTrigger className="text-sm text-teks hover:text-primary transition-colors">
+                    Cara tracking status laundry?
+                  </AccordionTrigger>
+                  <AccordionContent className="text-xs text-teks-samping leading-relaxed">
+                    Pantau status laundry melalui menu Tracking Laundry di sidebar kiri.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </Card>
+          </div>
+        </div>
 
         {/* Transaksi Terbaru */}
         <Card>
@@ -139,20 +180,20 @@ export default function Dashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-teks-samping text-xs border-b border-garis">
+                <tr className="text-teks-samping text-xs border-b border-garis bg-latar/50">
                   {["Pelanggan", "Layanan", "Berat", "Total", "Status"].map(h => (
-                    <th key={h} className="text-left pb-3 font-medium">{h}</th>
+                    <th key={h} className="text-left py-3 px-2 first:pl-0 font-semibold tracking-wide">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {recentTransactions.map(t => (
-                  <tr key={t.id} className="border-b border-garis last:border-0 hover:bg-latar transition">
-                    <td className="py-3 font-medium text-teks">{t.customerName}</td>
-                    <td className="py-3 text-teks-samping">{t.service}</td>
-                    <td className="py-3 text-teks-samping">{t.weight} kg</td>
-                    <td className="py-3 font-semibold text-teks">Rp {t.price.toLocaleString()}</td>
-                    <td className="py-3">
+                  <tr key={t.id} className="border-b border-garis last:border-0 hover:bg-latar/60 transition-colors">
+                    <td className="py-3.5 px-2 first:pl-0 font-semibold text-teks">{t.customerName}</td>
+                    <td className="py-3.5 px-2 text-teks-samping">{t.service}</td>
+                    <td className="py-3.5 px-2 text-teks-samping">{t.weight} kg</td>
+                    <td className="py-3.5 px-2 font-bold text-primary">Rp {t.price.toLocaleString()}</td>
+                    <td className="py-3.5 px-2">
                       <Badge type={statusType[t.status]}>{t.status}</Badge>
                     </td>
                   </tr>
@@ -160,31 +201,6 @@ export default function Dashboard() {
               </tbody>
             </table>
           </div>
-        </Card>
-
-        {/* Shadcn Accordion - FAQ Layanan */}
-        <Card>
-          <SectionTitle title="Info Layanan" subtitle="Pertanyaan umum seputar layanan laundry" />
-          <Accordion type="single" collapsible className="mt-2">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>Berapa lama proses laundry reguler?</AccordionTrigger>
-              <AccordionContent>
-                Proses laundry reguler membutuhkan waktu 2-3 hari kerja tergantung antrian dan jenis pakaian.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger>Apakah tersedia layanan express?</AccordionTrigger>
-              <AccordionContent>
-                Ya, layanan express tersedia dengan estimasi selesai dalam 6-8 jam. Biaya tambahan berlaku.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger>Bagaimana cara tracking status laundry?</AccordionTrigger>
-              <AccordionContent>
-                Kamu bisa memantau status laundry melalui menu Tracking Laundry di sidebar kiri.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
         </Card>
 
       </div>
