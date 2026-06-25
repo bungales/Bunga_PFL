@@ -5,6 +5,25 @@ export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState(null);
   const [rating, setRating] = useState(5);
 
+  // ============================================================
+  // PRD 3 - State untuk fitur newsletter & galeri
+  // ============================================================
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // ============================================================
+  // PRD 3 - Data galeri foto
+  // ============================================================
+  const gallery = [
+    { emoji: '🧺', label: 'Proses Cuci' },
+    { emoji: '👕', label: 'Setrika Rapi' },
+    { emoji: '📦', label: 'Packaging' },
+    { emoji: '🚗', label: 'Delivery' },
+    { emoji: '✨', label: 'Hasil Bersih' },
+    { emoji: '🏪', label: 'Outlet Kami' },
+  ];
+
   const faqs = [
     { q: 'Bagaimana cara kerja layanan antar jemput Netto Laundry?', a: 'Kami menyediakan layanan antar jemput untuk area tertentu. Hubungi kami untuk informasi lebih lanjut.' },
     { q: 'Berapa lama proses pencucian laundry?', a: 'Regular 2-3 hari, Express 6-8 jam, Super Express 3-4 jam.' },
@@ -30,7 +49,9 @@ export default function LandingPage() {
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', margin: 0, padding: 0, width: '100%' }}>
 
-      {/* NAVBAR */}
+      {/* ============================================================ */}
+      {/* PRD 1 - NAVBAR */}
+      {/* ============================================================ */}
       <nav style={{ background: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.08)', position: 'sticky', top: 0, zIndex: 100, padding: '0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -56,7 +77,9 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* ============================================================ */}
+      {/* PRD 1 - HERO */}
+      {/* ============================================================ */}
       <section id="beranda" style={{ ...s.gradBlue, position: 'relative', overflow: 'hidden', padding: '60px 24px 80px' }}>
         {/* Bubbles */}
         {[{s:200,t:20,r:80},{s:120,t:160,r:10},{s:300,t:-60,r:220,o:0.1},{s:90,b:30,r:140},{s:60,t:60,r:380,o:0.15}].map((b,i)=>(
@@ -122,7 +145,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* TENTANG KAMI */}
+      {/* ============================================================ */}
+      {/* PRD 1 - TENTANG KAMI */}
+      {/* ============================================================ */}
       <section id="tentang" style={{ background: '#f8fafc', padding: '60px 24px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign:'center', marginBottom:48 }}>
@@ -162,7 +187,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CARA KERJA */}
+      {/* ============================================================ */}
+      {/* PRD 1 - CARA KERJA */}
+      {/* ============================================================ */}
       <section id="cara-kerja" style={{ ...s.gradBlue, padding:'60px 24px', position:'relative', overflow:'hidden' }}>
         {[{s:180,t:20,l:-40},{s:120,b:30,l:60},{s:220,t:-50,r:100,o:0.1}].map((b,i)=>(
           <div key={i} style={{ position:'absolute', width:b.s, height:b.s, borderRadius:'50%', border:'2px solid rgba(255,255,255,0.3)', opacity:b.o||0.2, top:b.t, bottom:b.b, left:b.l, right:b.r, pointerEvents:'none' }} />
@@ -185,7 +212,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* LAYANAN */}
+      {/* ============================================================ */}
+      {/* PRD 1 - LAYANAN / PRICING */}
+      {/* ============================================================ */}
       <section id="layanan" style={{ background:'#fff', padding:'60px 24px' }}>
         <div style={{ maxWidth:1200, margin:'0 auto' }}>
           <div style={{ textAlign:'center', marginBottom:40 }}>
@@ -226,11 +255,13 @@ export default function LandingPage() {
                 </div>
               </div>
             ))}
-          </div>
+          </div>S
         </div>
       </section>
 
-      {/* ULASAN */}
+      {/* ============================================================ */}
+      {/* PRD 1 - ULASAN PELANGGAN */}
+      {/* ============================================================ */}
       <section id="ulasan" style={{ ...s.gradBlueDark, padding:'60px 24px', position:'relative', overflow:'hidden' }}>
         {[{s:200,t:10,l:-50},{s:150,b:20,r:-40},{s:240,t:-60,r:200,o:0.1}].map((b,i)=>(
           <div key={i} style={{ position:'absolute', width:b.s, height:b.s, borderRadius:'50%', border:'2px solid rgba(255,255,255,0.3)', opacity:b.o||0.2, top:b.t, bottom:b.b, left:b.l, right:b.r, pointerEvents:'none' }} />
@@ -289,7 +320,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* ============================================================ */}
+      {/* PRD 1 - FAQ */}
+      {/* ============================================================ */}
       <section id="faq" style={{ background:'#f8fafc', padding:'60px 24px' }}>
         <div style={{ maxWidth:900, margin:'0 auto' }}>
           <div style={{ textAlign:'center', marginBottom:40 }}>
@@ -314,7 +347,167 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ============================================================ */}
+      {/* PRD 2 - STATISTIK KEPERCAYAAN */}
+      {/* ============================================================ */}
+      <section style={{ background: '#fff', padding: '60px 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ color: '#2563eb', fontWeight: 700, fontSize: 13, marginBottom: 8 }}>ANGKA BICARA</p>
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '0 0 12px' }}>Dipercaya Ribuan Pelanggan</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 24 }}>
+            {[
+              { icon: '👥', nilai: '2.000+', label: 'Pelanggan Aktif' },
+              { icon: '👕', nilai: '50.000+', label: 'Kg Pakaian Dicuci' },
+              { icon: '⭐', nilai: '4.9/5', label: 'Rating Kepuasan' },
+              { icon: '📅', nilai: '5 Tahun', label: 'Pengalaman Melayani' },
+            ].map((item, i) => (
+              <div key={i} style={{ background: '#eff6ff', borderRadius: 20, padding: 28, textAlign: 'center', border: '2px solid #bfdbfe' }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>{item.icon}</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: '#2563eb', marginBottom: 4 }}>{item.nilai}</div>
+                <div style={{ fontSize: 13, color: '#475569', fontWeight: 600 }}>{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* PRD 2 - KENAPA PILIH KAMI */}
+      {/* ============================================================ */}
+      <section style={{ background: '#f8fafc', padding: '60px 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ color: '#2563eb', fontWeight: 700, fontSize: 13, marginBottom: 8 }}>KEUNGGULAN KAMI</p>
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '0 0 12px' }}>Kenapa Pilih Netto Laundry?</h2>
+            <p style={{ color: '#64748b', fontSize: 14, maxWidth: 560, margin: '0 auto' }}>Kami hadir bukan hanya sebagai jasa laundry biasa, tapi sebagai solusi lengkap perawatan pakaian Anda.</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 20 }}>
+            {[
+              { icon: '🔒', title: 'Anti Ketukar Garansi', desc: 'Setiap cucian dilabeli dengan sistem barcode. Pakaian Anda 100% tidak akan tertukar.' },
+              { icon: '📱', title: 'Lacak Real-Time', desc: 'Pantau status cucian Anda kapan saja lewat aplikasi. Notifikasi otomatis saat selesai.' },
+              { icon: '🌿', title: 'Ramah Lingkungan', desc: 'Deterjen biodegradable dan hemat air. Bersih untuk pakaian, baik untuk bumi.' },
+              { icon: '🚗', title: 'Antar Jemput Gratis', desc: 'Layanan pickup dan delivery ke depan pintu Anda tanpa biaya tambahan untuk area tertentu.' },
+            ].map((item, i) => (
+              <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 24, display: 'flex', gap: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.06)', alignItems: 'flex-start' }}>
+                <div style={{ width: 52, height: 52, background: '#eff6ff', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, flexShrink: 0 }}>{item.icon}</div>
+                <div>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', margin: '0 0 6px' }}>{item.title}</h3>
+                  <p style={{ fontSize: 13, color: '#64748b', lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* PRD 2 - CTA KONTAK / WHATSAPP */}
+      {/* ============================================================ */}
+      <section style={{ ...s.gradBlue, padding: '60px 24px', position: 'relative', overflow: 'hidden' }}>
+        {[{ s: 200, t: -60, r: 50 }, { s: 150, b: -40, l: 80 }].map((b, i) => (
+          <div key={i} style={{ position: 'absolute', width: b.s, height: b.s, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.3)', opacity: 0.2, top: b.t, bottom: b.b, left: b.l, right: b.r, pointerEvents: 'none' }} />
+        ))}
+        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontWeight: 700, fontSize: 13, marginBottom: 8 }}>HUBUNGI KAMI</p>
+          <h2 style={{ fontSize: 32, fontWeight: 800, color: '#fff', margin: '0 0 12px' }}>Siap Melayani Anda Sekarang!</h2>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 14, lineHeight: 1.7, marginBottom: 32 }}>
+            Punya pertanyaan atau mau langsung pesan? Tim kami siap membantu 24 jam via WhatsApp.
+          </p>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer"
+              style={{ background: '#25d366', color: '#fff', fontWeight: 700, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
+              💬 Chat WhatsApp
+            </a>
+            <a href="tel:+6281234567890"
+              style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontWeight: 700, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 15, border: '2px solid rgba(255,255,255,0.5)' }}>
+              📞 Telepon Kami
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* PRD 3 - GALERI FOTO */}
+      {/* ============================================================ */}
+      <section id="galeri" style={{ background: '#fff', padding: '60px 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <p style={{ color: '#2563eb', fontWeight: 700, fontSize: 13, marginBottom: 8 }}>GALERI</p>
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: '#0f172a', margin: '0 0 12px' }}>Lihat Proses Kami dari Dekat</h2>
+            <p style={{ color: '#64748b', fontSize: 14, maxWidth: 480, margin: '0 auto' }}>Transparansi proses adalah prioritas kami. Setiap tahap dikerjakan dengan standar kebersihan tinggi.</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+            {gallery.map((item, i) => (
+              <div key={i} style={{ background: 'linear-gradient(135deg, #eff6ff, #dbeafe)', borderRadius: 20, aspectRatio: '4/3', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, cursor: 'pointer', border: '2px solid #bfdbfe', transition: 'transform 0.2s' }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+                <span style={{ fontSize: 52 }}>{item.emoji}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: '#1e40af' }}>{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* PRD 3 - BANNER PROMO */}
+      {/* ============================================================ */}
+      <section style={{ background: '#fef9c3', padding: '40px 24px', borderTop: '2px dashed #fbbf24', borderBottom: '2px dashed #fbbf24' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <span style={{ fontSize: 48 }}>🎉</span>
+            <div>
+              <div style={{ background: '#dc2626', color: '#fff', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 999, display: 'inline-block', marginBottom: 6 }}>PROMO TERBATAS</div>
+              <h3 style={{ fontSize: 22, fontWeight: 800, color: '#92400e', margin: '0 0 4px' }}>Diskon 20% untuk Pelanggan Baru!</h3>
+              <p style={{ fontSize: 13, color: '#92400e', margin: 0 }}>Daftar sekarang dan nikmati diskon di 3 orderan pertama Anda.</p>
+            </div>
+          </div>
+          <Link to="/register" style={{ background: '#f59e0b', color: '#fff', fontWeight: 800, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', fontSize: 14, whiteSpace: 'nowrap', flexShrink: 0 }}>
+            Klaim Promo →
+          </Link>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* PRD 3 - NEWSLETTER SUBSCRIPTION */}
+      {/* ============================================================ */}
+      <section style={{ background: '#f8fafc', padding: '60px 24px' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+          <span style={{ fontSize: 40, display: 'block', marginBottom: 12 }}>📧</span>
+          <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0f172a', margin: '0 0 8px' }}>Dapatkan Info Promo Terbaru</h2>
+          <p style={{ fontSize: 14, color: '#64748b', marginBottom: 24 }}>Daftarkan email Anda dan jadi yang pertama tahu promo spesial dari Netto Laundry.</p>
+          {subscribed ? (
+            <div style={{ background: '#dcfce7', border: '2px solid #86efac', borderRadius: 14, padding: '16px 24px', color: '#166534', fontWeight: 700, fontSize: 14 }}>
+              ✅ Terima kasih! Anda sudah terdaftar.
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 8, maxWidth: 480, margin: '0 auto' }}>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+                placeholder="Masukkan email Anda..."
+                style={{ flex: 1, border: '2px solid #e2e8f0', borderRadius: 12, padding: '12px 16px', fontSize: 14, outline: 'none', fontFamily: 'inherit' }} />
+              <button onClick={() => { if (email) setSubscribed(true); }}
+                style={{ background: '#2563eb', color: '#fff', fontWeight: 700, padding: '12px 24px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14, whiteSpace: 'nowrap' }}>
+                Daftar
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* PRD 3 - WHATSAPP FLOATING BUTTON */}
+      {/* ============================================================ */}
+      <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer"
+        style={{ position: 'fixed', bottom: 24, right: 24, width: 56, height: 56, background: '#25d366', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, boxShadow: '0 4px 20px rgba(37,211,102,0.5)', zIndex: 999, textDecoration: 'none', cursor: 'pointer' }}
+        title="Chat WhatsApp">
+        💬
+      </a>
+
+      {/* ============================================================ */}
+      {/* PRD 1 - FOOTER */}
+      {/* ============================================================ */}
       <footer style={{ ...s.gradBlue, padding:'48px 24px 24px', position:'relative', overflow:'hidden' }}>
         {[{s:180,t:-50,r:100},{s:120,b:10,l:80}].map((b,i)=>(
           <div key={i} style={{ position:'absolute', width:b.s, height:b.s, borderRadius:'50%', border:'2px solid rgba(255,255,255,0.3)', opacity:0.2, top:b.t, bottom:b.b, left:b.l, right:b.r, pointerEvents:'none' }} />
