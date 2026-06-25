@@ -1,14 +1,14 @@
 import { useState } from "react";
-import PageHeader from "../components/PageHeader";
-import Button from "../components/Button";
-import Badge from "../components/Badge";
-import Table from "../components/Table";
-import SearchBar from "../components/SearchBar";
-import Modal from "../components/Modal";
-import InputField from "../components/InputField";
-import SelectField from "../components/SelectField";
-import Toast from "../components/Toast";
-import transactionsData from "../data/transactions.json";
+import PageHeader from "../../components/PageHeader";
+import Button from "../../components/Button";
+import Badge from "../../components/Badge";
+import Table from "../../components/Table";
+import SearchBar from "../../components/SearchBar";
+import Modal from "../../components/Modal";
+import InputField from "../../components/InputField";
+import SelectField from "../../components/SelectField";
+import Toast from "../../components/Toast";
+import transactionsData from "../../data/transactions.json";
 import { MdAdd, MdReceipt, MdCheckCircle, MdAutorenew, MdSchedule } from "react-icons/md";
 
 const statusType = { Selesai: "success", Proses: "primary", Menunggu: "warning" };

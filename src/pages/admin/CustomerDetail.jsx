@@ -1,11 +1,11 @@
 import { useParams, Link } from "react-router-dom";
-import PageHeader from "../components/PageHeader";
-import Avatar from "../components/Avatar";
-import Badge from "../components/Badge";
-import Card from "../components/Card";
-import EmptyState from "../components/EmptyState";
-import customersData from "../data/customers.json";
-import transactionsData from "../data/transactions.json";
+import PageHeader from "../../components/PageHeader";
+import Avatar from "../../components/Avatar";
+import Badge from "../../components/Badge";
+import Card from "../../components/Card";
+import EmptyState from "../../components/EmptyState";
+import customersData from "../../data/customers.json";
+import transactionsData from "../../data/transactions.json";
 import { MdArrowBack, MdPerson, MdEmail, MdPhone, MdStar, MdReceipt, MdLocationOn, MdPeople, MdCalendarToday, MdShoppingCart } from "react-icons/md";
 
 const segmentType = { VIP: "gold", Loyal: "silver", Regular: "primary", New: "info" };

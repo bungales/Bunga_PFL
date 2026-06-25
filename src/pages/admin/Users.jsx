@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import PageHeader from "../components/PageHeader";
-import Button from "../components/Button";
-import Badge from "../components/Badge";
-import Table from "../components/Table";
-import Modal from "../components/Modal";
-import InputField from "../components/InputField";
-import SelectField from "../components/SelectField";
-import Toast from "../components/Toast";
-import EmptyState from "../components/EmptyState";
-import Loading from "../components/Loading";
-import { usersAPI } from "../services/usersAPI";
+import PageHeader from "../../components/PageHeader";
+import Button from "../../components/Button";
+import Badge from "../../components/Badge";
+import Table from "../../components/Table";
+import Modal from "../../components/Modal";
+import InputField from "../../components/InputField";
+import SelectField from "../../components/SelectField";
+import Toast from "../../components/Toast";
+import EmptyState from "../../components/EmptyState";
+import Loading from "../../components/Loading";
+import { usersAPI } from "../../services/usersAPI";
 import { MdAdd, MdEdit, MdDelete, MdPeople } from "react-icons/md";
 
 const emptyForm = { name: "", email: "", password: "", role: "user" };

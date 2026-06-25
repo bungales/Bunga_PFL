@@ -1,12 +1,12 @@
 import { useState } from "react";
-import PageHeader from "../components/PageHeader";
-import Button from "../components/Button";
-import Badge from "../components/Badge";
-import Modal from "../components/Modal";
-import InputField from "../components/InputField";
-import SelectField from "../components/SelectField";
-import Alert from "../components/Alert";
-import Toast from "../components/Toast";
+import PageHeader from "../../components/PageHeader";
+import Button from "../../components/Button";
+import Badge from "../../components/Badge";
+import Modal from "../../components/Modal";
+import InputField from "../../components/InputField";
+import SelectField from "../../components/SelectField";
+import Alert from "../../components/Alert";
+import Toast from "../../components/Toast";
 import { MdWhatsapp, MdSms, MdAdd, MdSend, MdNotifications, MdCheckCircle, MdSchedule, MdPerson } from "react-icons/md";
 
 const initialNotifs = [

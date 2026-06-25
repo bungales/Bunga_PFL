@@ -1,9 +1,9 @@
-import PageHeader from "../components/PageHeader";
-import Card from "../components/Card";
-import SectionTitle from "../components/SectionTitle";
-import Button from "../components/Button";
-import customers from "../data/customers.json";
-import transactions from "../data/transactions.json";
+import PageHeader from "../../components/PageHeader";
+import Card from "../../components/Card";
+import SectionTitle from "../../components/SectionTitle";
+import Button from "../../components/Button";
+import customers from "../../data/customers.json";
+import transactions from "../../data/transactions.json";
 import { MdDownload, MdTrendingUp, MdPeople, MdRepeat, MdStar, MdAttachMoney } from "react-icons/md";
 
 const monthlyData = [

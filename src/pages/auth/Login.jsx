@@ -24,7 +24,7 @@ export default function Login() {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userId", data.user.id);
       localStorage.setItem("userEmail", data.user.email);
-      navigate("/");
+      navigate("/admin");
     } catch (err) {
       setError(err.message || "Email atau password salah");
     } finally {

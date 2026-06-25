@@ -1,10 +1,10 @@
-import PageHeader from "../components/PageHeader";
-import Card from "../components/Card";
-import Badge from "../components/Badge";
-import Avatar from "../components/Avatar";
-import SectionTitle from "../components/SectionTitle";
-import ProgressBar from "../components/ProgressBar";
-import customers from "../data/customers.json";
+import PageHeader from "../../components/PageHeader";
+import Card from "../../components/Card";
+import Badge from "../../components/Badge";
+import Avatar from "../../components/Avatar";
+import SectionTitle from "../../components/SectionTitle";
+import ProgressBar from "../../components/ProgressBar";
+import customers from "../../data/customers.json";
 import { MdEmojiEvents, MdCardGiftcard, MdStar } from "react-icons/md";
 
 const segmentType = { VIP: "gold", Loyal: "silver", Regular: "primary", New: "info" };

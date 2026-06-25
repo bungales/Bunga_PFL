@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import PageHeader from "../components/PageHeader";
-import Badge from "../components/Badge";
-import EmptyState from "../components/EmptyState";
-import transactionsData from "../data/transactions.json";
+import PageHeader from "../../components/PageHeader";
+import Badge from "../../components/Badge";
+import EmptyState from "../../components/EmptyState";
+import transactionsData from "../../data/transactions.json";
 import { MdCheckCircle, MdRadioButtonUnchecked, MdLocalLaundryService, MdRefresh, MdAccessTime } from "react-icons/md";
 
 const steps = ["Diterima", "Dicuci", "Dikeringkan", "Disetrika", "Selesai", "Diambil"];

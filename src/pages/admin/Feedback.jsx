@@ -1,9 +1,9 @@
 import { useState } from "react";
-import PageHeader from "../components/PageHeader";
-import Card from "../components/Card";
-import SectionTitle from "../components/SectionTitle";
-import Badge from "../components/Badge";
-import Accordion from "../components/Accordion";
+import PageHeader from "../../components/PageHeader";
+import Card from "../../components/Card";
+import SectionTitle from "../../components/SectionTitle";
+import Badge from "../../components/Badge";
+import Accordion from "../../components/Accordion";
 import { MdStar, MdStarBorder, MdFormatQuote } from "react-icons/md";
 
 const initialFeedback = [

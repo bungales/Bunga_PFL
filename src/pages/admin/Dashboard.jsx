@@ -1,18 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import PageHeader from "../components/PageHeader";
-import StatCard from "../components/StatCard";
-import SectionTitle from "../components/SectionTitle";
-import Card from "../components/Card";
-import Badge from "../components/Badge";
-import Button from "../components/Button";
+import PageHeader from "../../components/PageHeader";
+import StatCard from "../../components/StatCard";
+import SectionTitle from "../../components/SectionTitle";
+import Card from "../../components/Card";
+import Badge from "../../components/Badge";
+import Button from "../../components/Button";
 import { MdPeople, MdReceipt, MdTrendingUp, MdHistory, MdCheckCircle } from "react-icons/md";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer
 } from "recharts";
-import customers from "../data/customers.json";
-import transactions from "../data/transactions.json";
+import customers from "../../data/customers.json";
+import transactions from "../../data/transactions.json";
 
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import {

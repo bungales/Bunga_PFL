@@ -6,17 +6,17 @@ import {
 } from "react-icons/md";
 
 const menuItems = [
-  { id: "menu-dashboard", to: "/", label: "Dashboard", icon: <MdDashboard /> },
-  { id: "menu-customers", to: "/customers", label: "Pelanggan", icon: <MdPeople /> },
-  { id: "menu-transactions", to: "/transactions", label: "Transaksi", icon: <MdReceipt /> },
-  { id: "menu-tracking", to: "/tracking", label: "Tracking Laundry", icon: <MdLocalLaundryService /> },
-  { id: "menu-notifications", to: "/notifications", label: "Notifikasi", icon: <MdNotifications /> },
-  { id: "menu-loyalty", to: "/loyalty", label: "Program Loyalitas", icon: <MdStar /> },
-  { id: "menu-segmentation", to: "/segmentation", label: "Segmentasi", icon: <MdSegment /> },
-  { id: "menu-feedback", to: "/feedback", label: "Feedback", icon: <MdFeedback /> },
-  { id: "menu-reports", to: "/reports", label: "Laporan CRM", icon: <MdBarChart /> },
-  { id: "menu-users", to: "/users", label: "Users", icon: <MdManageAccounts /> },
-  { id: "menu-components", to: "/components", label: "Components", icon: <MdWidgets /> },
+  { id: "menu-dashboard", to: "/admin", label: "Dashboard", icon: <MdDashboard /> },
+  { id: "menu-customers", to: "/admin/customers", label: "Pelanggan", icon: <MdPeople /> },
+  { id: "menu-transactions", to: "/admin/transactions", label: "Transaksi", icon: <MdReceipt /> },
+  { id: "menu-tracking", to: "/admin/tracking", label: "Tracking Laundry", icon: <MdLocalLaundryService /> },
+  { id: "menu-notifications", to: "/admin/notifications", label: "Notifikasi", icon: <MdNotifications /> },
+  { id: "menu-loyalty", to: "/admin/loyalty", label: "Program Loyalitas", icon: <MdStar /> },
+  { id: "menu-segmentation", to: "/admin/segmentation", label: "Segmentasi", icon: <MdSegment /> },
+  { id: "menu-feedback", to: "/admin/feedback", label: "Feedback", icon: <MdFeedback /> },
+  { id: "menu-reports", to: "/admin/reports", label: "Laporan CRM", icon: <MdBarChart /> },
+  { id: "menu-users", to: "/admin/users", label: "Users", icon: <MdManageAccounts /> },
+  { id: "menu-components", to: "/admin/components", label: "Components", icon: <MdWidgets /> },
 ];
 
 const menuClass = ({ isActive }) =>
@@ -55,7 +55,7 @@ export default function Sidebar() {
         <ul id="menu-list" className="space-y-1">
           {menuItems.map((item) => (
             <li key={item.id}>
-              <NavLink id={item.id} to={item.to} end={item.to === "/"} className={menuClass}>
+              <NavLink id={item.id} to={item.to} end={item.to === "/admin"} className={menuClass}>
                 {({ isActive }) => (
                   <>
                     {/* Garis Vertikal Biru (Persis Foto DashStack) */}

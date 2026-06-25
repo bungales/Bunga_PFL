@@ -1,8 +1,8 @@
-import PageHeader from "../components/PageHeader";
-import Badge from "../components/Badge";
-import SectionTitle from "../components/SectionTitle";
-import Avatar from "../components/Avatar";
-import customers from "../data/customers.json";
+import PageHeader from "../../components/PageHeader";
+import Badge from "../../components/Badge";
+import SectionTitle from "../../components/SectionTitle";
+import Avatar from "../../components/Avatar";
+import customers from "../../data/customers.json";
 import { MdPeople, MdPersonOff, MdTrendingUp, MdStar } from "react-icons/md";
 
 const segments = [
