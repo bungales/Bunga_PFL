@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import PageHeader from "../../components/PageHeader";
 import Badge from "../../components/Badge";
 import EmptyState from "../../components/EmptyState";
+import Toast from "../../components/Toast";
 import transactionsData from "../../data/transactions.json";
-import { MdCheckCircle, MdRadioButtonUnchecked, MdLocalLaundryService, MdRefresh, MdAccessTime } from "react-icons/md";
+import { MdCheckCircle, MdRadioButtonUnchecked, MdLocalLaundryService, MdRefresh, MdAccessTime, MdQrCode, MdPersonAdd, MdClose } from "react-icons/md";
 
 const steps = ["Diterima", "Dicuci", "Dikeringkan", "Disetrika", "Selesai", "Diambil"];
 const statusType = { Selesai: "success", Proses: "primary", Menunggu: "warning" };
@@ -46,14 +47,66 @@ function TrackingBar({ current }) {
 export default function Tracking() {
   const active = transactionsData.filter(t => t.status !== "Selesai" || t.trackingStatus !== "Diambil").slice(0, 8);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [pendingVisits, setPendingVisits] = useState([]);
+  const [approvedVisits, setApprovedVisits] = useState([]);
+  const [toast, setToast] = useState({ show: false, type: "success", message: "" });
+
+  const loadVisits = () => {
+    const stored = JSON.parse(localStorage.getItem("pendingVisits") || "[]");
+    setPendingVisits(stored.filter(v => !v.approved));
+    setApprovedVisits(stored.filter(v => v.approved));
+  };
 
   useEffect(() => {
     setLastUpdated(new Date().toLocaleTimeString("id-ID"));
+    loadVisits();
     const interval = setInterval(() => {
       setLastUpdated(new Date().toLocaleTimeString("id-ID"));
-    }, 30000);
+      loadVisits();
+    }, 1500);
     return () => clearInterval(interval);
   }, []);
+
+  const approveVisit = (customerId, customerName) => {
+    // 1. Tandai approved di pendingVisits
+    const stored = JSON.parse(localStorage.getItem("pendingVisits") || "[]");
+    const visit = stored.find(v => v.customerId === customerId);
+    const updated = stored.map(v => v.customerId === customerId ? { ...v, approved: true } : v);
+    localStorage.setItem("pendingVisits", JSON.stringify(updated));
+
+    // 2. Tambahkan ke daftar pelanggan (extraCustomers) kalau belum ada
+    const extraCustomers = JSON.parse(localStorage.getItem("extraCustomers") || "[]");
+    const alreadyExists = extraCustomers.find(c => c.customerId === customerId);
+    if (!alreadyExists && visit) {
+      const newCustomer = {
+        customerId,
+        customerName: visit.customerName,
+        phone: visit.phone,
+        email: "",
+        address: "",
+        customerType: "Lainnya",
+        segment: visit.segment || "New",
+        points: 0,
+        totalTransactions: 0,
+        totalSpent: 0,
+        joinDate: new Date().toISOString().split("T")[0],
+        lastTransaction: "-",
+        status: "active",
+      };
+      extraCustomers.push(newCustomer);
+      localStorage.setItem("extraCustomers", JSON.stringify(extraCustomers));
+    }
+
+    loadVisits();
+    setToast({ show: true, type: "success", message: `${customerName} berhasil disetujui dan ditambahkan ke pelanggan.` });
+  };
+
+  const dismissVisit = (customerId) => {
+    const stored = JSON.parse(localStorage.getItem("pendingVisits") || "[]");
+    const updated = stored.filter(v => v.customerId !== customerId);
+    localStorage.setItem("pendingVisits", JSON.stringify(updated));
+    loadVisits();
+  };
 
   const selesai = active.filter(t => t.status === "Selesai").length;
   const proses = active.filter(t => t.status === "Proses").length;
@@ -86,10 +139,86 @@ export default function Tracking() {
         </div>
       )}
 
-      {active.length === 0 ? (
+      {/* Pending QR Visits */}
+      {pendingVisits.length > 0 && (
+        <div className="mb-5">
+          <div className="flex items-center gap-2 mb-3">
+            <MdQrCode className="text-amber-500 text-lg" />
+            <h3 className="font-semibold text-teks text-sm">Pelanggan Menunggu Persetujuan QR</h3>
+            <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">{pendingVisits.length}</span>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {pendingVisits.map(v => (
+              <div key={v.customerId} className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-amber-200 flex items-center justify-center font-bold text-amber-700">
+                    {v.customerName.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-teks text-sm">{v.customerName}</p>
+                    <p className="text-xs text-teks-samping">{v.phone} · {v.segment}</p>
+                    <p className="text-xs text-teks-samping">
+                      Scan: {new Date(v.scanTime).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2 shrink-0">
+                  <button
+                    onClick={() => approveVisit(v.customerId, v.customerName)}
+                    className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition"
+                  >
+                    <MdPersonAdd className="text-base" /> Setujui
+                  </button>
+                  <button
+                    onClick={() => dismissVisit(v.customerId)}
+                    className="p-1.5 rounded-lg border border-gray-200 hover:bg-gray-100 text-gray-400 transition"
+                  >
+                    <MdClose />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {active.length === 0 && approvedVisits.length === 0 ? (
         <EmptyState icon={<MdLocalLaundryService />} title="Tidak ada laundry aktif" description="Semua laundry sudah selesai diproses." />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Kartu dari pelanggan yang sudah disetujui QR */}
+          {approvedVisits.map(v => (
+            <div key={v.customerId} className="bg-white rounded-2xl shadow-sm border-2 border-green-200 p-5 hover:shadow-md transition-shadow">
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-xs bg-green-100 text-green-600 font-semibold px-2 py-0.5 rounded-full">✓ Check-in QR</span>
+                  </div>
+                  <p className="font-bold text-teks">{v.customerName}</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs text-teks-samping">{v.phone}</span>
+                    <span className="text-xs text-teks-samping">·</span>
+                    <span className="text-xs text-teks-samping">
+                      {new Date(v.scanTime).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge type="success">Hadir</Badge>
+                  <button
+                    onClick={() => dismissVisit(v.customerId)}
+                    className="p-1 text-gray-300 hover:text-red-400 transition"
+                    title="Hapus dari tracking"
+                  >
+                    <MdClose />
+                  </button>
+                </div>
+              </div>
+              <TrackingBar current="Diterima" />
+            </div>
+          ))}
+
+          {/* Kartu transaksi dari data JSON */}
           {active.map(t => (
             <div key={t.id} className="bg-white rounded-2xl shadow-sm border border-garis/50 p-5 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-start">
@@ -109,6 +238,7 @@ export default function Tracking() {
           ))}
         </div>
       )}
+      <Toast show={toast.show} type={toast.type} message={toast.message} onClose={() => setToast(t => ({ ...t, show: false }))} />
     </div>
   );
 }

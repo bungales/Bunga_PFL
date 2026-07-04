@@ -4,6 +4,9 @@ import { SlSettings } from "react-icons/sl";
 
 export default function Header() {
   const [search, setSearch] = useState("");
+  const userName = localStorage.getItem("userName") || "Admin";
+  const userRole = localStorage.getItem("userRole") || "Super Admin";
+  const initials = userName.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
 
   return (
     <div id="header-container" className="flex justify-between items-center p-4 bg-white border-b border-garis sticky top-0 z-10">
@@ -31,15 +34,12 @@ export default function Header() {
         </div>
         <div id="profile-container" className="flex items-center space-x-3 border-l pl-4 border-garis">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-semibold text-teks">Admin</p>
-            <p className="text-xs text-teks-samping">Super Admin</p>
+            <p className="text-sm font-semibold text-teks">{userName}</p>
+            <p className="text-xs text-teks-samping capitalize">{userRole}</p>
           </div>
-          <img
-            id="profile-avatar"
-            src="https://avatar.iran.liara.run/public/1"
-            className="w-9 h-9 rounded-full border-2 border-primary"
-            alt="avatar"
-          />
+          <div className="w-9 h-9 rounded-full border-2 border-primary bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-bold text-sm select-none">
+            {initials || "A"}
+          </div>
         </div>
       </div>
     </div>

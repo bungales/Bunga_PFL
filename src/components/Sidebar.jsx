@@ -27,6 +27,9 @@ const menuClass = ({ isActive }) =>
 
     
 export default function Sidebar() {
+  const userName = localStorage.getItem("userName") || "Admin";
+  const userRole = localStorage.getItem("userRole") || "admin";
+  const initials = userName.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
   return (
     <div id="sidebar" className="flex min-h-screen w-64 flex-col bg-white border-r border-gray-100 shadow-sm font-barlow">
       
@@ -82,16 +85,14 @@ export default function Sidebar() {
       <div id="sidebar-footer" className="p-4 border-t border-gray-50">
         <div className="flex items-center space-x-3 mb-4 px-2">
           <div className="relative">
-            <img 
-              src="https://avatar.iran.liara.run/public/1" 
-              className="w-10 h-10 rounded-full border border-gray-100" 
-              alt="admin" 
-            />
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-bold text-sm select-none">
+              {initials || "A"}
+            </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-hijau border-2 border-white rounded-full"></div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[#202224] text-sm font-bold truncate uppercase">Admin Netto</p>
-            <p className="text-gray-400 text-[10px] truncate">Manajer Operasional</p>
+            <p className="text-[#202224] text-sm font-bold truncate uppercase">{userName}</p>
+            <p className="text-gray-400 text-[10px] truncate capitalize">{userRole}</p>
           </div>
         </div>
         
@@ -102,6 +103,8 @@ export default function Sidebar() {
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("userId");
             localStorage.removeItem("userEmail");
+            localStorage.removeItem("userRole");
+            localStorage.removeItem("userName");
             window.location.href = "/login";
           }}
           className="w-full flex items-center px-4 py-2 text-gray-500 hover:text-merah text-sm font-medium transition-all rounded-xl hover:bg-red-50 group"

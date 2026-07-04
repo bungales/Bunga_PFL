@@ -1,14 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { usersAPI } from "../../services/usersAPI";
 import { BsFillExclamationDiamondFill } from "react-icons/bs";
 import { ImSpinner2 } from "react-icons/im";
+import { MdQrCode } from "react-icons/md";
+import customersData from "../../data/customers.json";
 
 export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [dataForm, setDataForm] = useState({ email: "", password: "" });
+  const [showMemberLogin, setShowMemberLogin] = useState(false);
+  const [memberPhone, setMemberPhone] = useState("");
+
+  // Kalau sudah login member, langsung ke /member
+  useEffect(() => {
+    const memberId = localStorage.getItem("memberId");
+    if (memberId) { navigate("/member", { replace: true }); return; }
+    // Kalau sudah login admin DAN bukan mode member toggle, ke /admin
+    // Tapi jangan redirect kalau user sengaja buka /login untuk login member
+  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,10 +44,49 @@ export default function Login() {
     }
   };
 
+  const handleMemberLogin = (e) => {
+    e.preventDefault();
+    setError("");
+    // Gabung data JSON + pelanggan baru dari localStorage
+    const extra = JSON.parse(localStorage.getItem("extraCustomers") || "[]");
+    const allCustomers = [...customersData, ...extra.filter(e => !customersData.find(c => c.customerId === e.customerId))];
+    const customer = allCustomers.find(c => c.phone === memberPhone.trim());
+    if (!customer) {
+      setError("Nomor HP tidak ditemukan.");
+      return;
+    }
+    const pendingVisits = JSON.parse(localStorage.getItem("pendingVisits") || "[]");
+    const visit = pendingVisits.find(v => v.customerId === customer.customerId);
+    if (!visit || !visit.approved) {
+      setError("Belum disetujui admin. Silakan scan QR dan tunggu persetujuan.");
+      return;
+    }
+    localStorage.setItem("memberId", customer.customerId);
+    navigate("/member");
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-semibold text-teks mb-1 text-center">Selamat Datang 👋</h2>
       <p className="text-center text-sm text-teks-samping mb-5">Masuk ke Netto Laundry</p>
+
+      {/* Toggle login mode */}
+      <div className="flex rounded-xl overflow-hidden border border-garis mb-5">
+        <button
+          type="button"
+          onClick={() => { setShowMemberLogin(false); setError(""); }}
+          className={`flex-1 py-2 text-sm font-semibold transition ${!showMemberLogin ? "bg-primary text-white" : "bg-white text-teks-samping"}`}
+        >
+          Admin
+        </button>
+        <button
+          type="button"
+          onClick={() => { setShowMemberLogin(true); setError(""); }}
+          className={`flex-1 py-2 text-sm font-semibold transition flex items-center justify-center gap-1 ${showMemberLogin ? "bg-primary text-white" : "bg-white text-teks-samping"}`}
+        >
+          <MdQrCode /> Member
+        </button>
+      </div>
 
       {error && (
         <div className="bg-red-50 border border-merah mb-4 p-3 text-sm text-merah rounded-lg flex items-center">
@@ -48,30 +99,50 @@ export default function Login() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-teks mb-1">Email</label>
-          <input
-            type="email" name="email" placeholder="email@domain.com"
-            onChange={handleChange} value={dataForm.email}
-            className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
-            required
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-teks mb-1">Password</label>
-          <input
-            type="password" name="password" placeholder="••••••••"
-            onChange={handleChange} value={dataForm.password}
-            className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}
-          className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 rounded-xl transition duration-300 disabled:opacity-60">
-          Masuk
-        </button>
-      </form>
+      {!showMemberLogin ? (
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-teks mb-1">Email</label>
+            <input
+              type="email" name="email" placeholder="email@domain.com"
+              onChange={handleChange} value={dataForm.email}
+              className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-teks mb-1">Password</label>
+            <input
+              type="password" name="password" placeholder="••••••••"
+              onChange={handleChange} value={dataForm.password}
+              className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
+              required
+            />
+          </div>
+          <button type="submit" disabled={loading}
+            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 rounded-xl transition duration-300 disabled:opacity-60">
+            Masuk
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleMemberLogin}>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-teks mb-1">Nomor HP / WhatsApp</label>
+            <input
+              type="tel" placeholder="08xxxxxxxxxx"
+              value={memberPhone}
+              onChange={e => setMemberPhone(e.target.value)}
+              className="w-full px-4 py-2.5 bg-latar border border-garis rounded-xl text-sm outline-none focus:border-primary transition"
+              required
+            />
+            <p className="text-xs text-teks-samping mt-1.5">Pastikan Anda sudah scan QR dan disetujui admin.</p>
+          </div>
+          <button type="submit"
+            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 rounded-xl transition duration-300">
+            Masuk sebagai Member
+          </button>
+        </form>
+      )}
 
       <div className="flex justify-between mt-4 text-sm">
         <Link to="/forgot" className="text-primary hover:underline">Lupa password?</Link>

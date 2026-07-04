@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
 import PageHeader from "../../components/PageHeader";
 import Button from "../../components/Button";
 import Badge from "../../components/Badge";
@@ -12,7 +13,7 @@ import Table from "../../components/Table";
 import Toast from "../../components/Toast";
 import EmptyState from "../../components/EmptyState";
 import customersData from "../../data/customers.json";
-import { MdAdd, MdEdit, MdDelete, MdVisibility, MdPeople } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdVisibility, MdPeople, MdQrCode, MdDownload } from "react-icons/md";
 
 const segmentType = { VIP: "gold", Loyal: "silver", Regular: "primary", New: "info" };
 const statusType = { active: "success", inactive: "danger" };
@@ -23,12 +24,21 @@ const emptyForm = {
 };
 
 export default function Customers() {
-  const [customers, setCustomers] = useState(customersData);
+  const [customers, setCustomers] = useState(() => {
+    const extra = JSON.parse(localStorage.getItem("extraCustomers") || "[]");
+    const existing = customersData.map(c => {
+      const updated = extra.find(e => e.customerId === c.customerId);
+      return updated || c;
+    });
+    const newOnes = extra.filter(e => !customersData.find(c => c.customerId === e.customerId));
+    return [...existing, ...newOnes];
+  });
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editData, setEditData] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [toast, setToast] = useState({ show: false, type: "success", message: "" });
+  const [qrCustomer, setQrCustomer] = useState(null);
 
   const searchRef = useRef(null);
   useEffect(() => { if (searchRef.current) searchRef.current.focus(); }, []);
@@ -59,21 +69,56 @@ export default function Customers() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    let savedCustomer;
     if (editData) {
-      setCustomers(prev => prev.map(c => c.customerId === editData.customerId ? { ...c, ...form } : c));
+      const updated = { ...editData, ...form };
+      setCustomers(prev => prev.map(c => c.customerId === editData.customerId ? updated : c));
       showToast("success", "Data pelanggan berhasil diperbarui.");
+      savedCustomer = updated;
+      // update di localStorage juga
+      const stored = JSON.parse(localStorage.getItem("extraCustomers") || "[]");
+      const updatedStored = stored.map(c => c.customerId === editData.customerId ? updated : c);
+      localStorage.setItem("extraCustomers", JSON.stringify(updatedStored));
     } else {
       const newC = {
         ...form,
-        customerId: "C" + (customers.length + 1).toString().padStart(3, "0"),
+        customerId: "C" + Date.now(),
         points: 0, totalTransactions: 0, totalSpent: 0,
         joinDate: new Date().toISOString().split("T")[0],
         lastTransaction: "-", status: "active"
       };
       setCustomers(prev => [...prev, newC]);
       showToast("success", "Pelanggan baru berhasil ditambahkan.");
+      savedCustomer = newC;
+      // simpan ke localStorage supaya QR scan bisa kenali
+      const stored = JSON.parse(localStorage.getItem("extraCustomers") || "[]");
+      stored.push(newC);
+      localStorage.setItem("extraCustomers", JSON.stringify(stored));
     }
     setShowModal(false);
+    // Langsung tampilkan QR setelah simpan
+    setQrCustomer(savedCustomer);
+  };
+
+  const handleDownloadQR = () => {
+    const svg = document.getElementById("qr-modal-svg");
+    if (!svg) return;
+    const serializer = new XMLSerializer();
+    const svgStr = serializer.serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    canvas.width = 300; canvas.height = 300;
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, 300, 300);
+      ctx.drawImage(img, 0, 0, 300, 300);
+      const a = document.createElement("a");
+      a.download = `QR-${qrCustomer?.customerId}.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgStr)));
   };
 
   return (
@@ -114,7 +159,7 @@ export default function Customers() {
                       size="sm"
                     />
                     <div>
-                      <Link to={`/customers/${c.customerId}`} className="font-medium text-teks hover:text-primary hover:underline">{c.customerName}</Link>
+                      <Link to={`/admin/customers/${c.customerId}`} className="font-medium text-teks hover:text-primary hover:underline">{c.customerName}</Link>
                       <p className="text-xs text-teks-samping">{c.email}</p>
                     </div>
                   </div>
@@ -127,9 +172,10 @@ export default function Customers() {
                 <td className="py-3"><Badge type={statusType[c.status]}>{c.status === "active" ? "Aktif" : "Tidak Aktif"}</Badge></td>
                 <td className="py-3">
                   <div className="flex space-x-2">
-                    <Link to={`/customers/${c.customerId}`}>
+                    <Link to={`/admin/customers/${c.customerId}`}>
                       <Button type="success" size="sm"><MdVisibility /></Button>
                     </Link>
+                    <Button type="secondary" size="sm" onClick={() => setQrCustomer(c)}><MdQrCode /></Button>
                     <Button type="primary" size="sm" onClick={() => openEdit(c)}><MdEdit /></Button>
                     <Button type="danger" size="sm" onClick={() => handleDelete(c.customerId)}><MdDelete /></Button>
                   </div>
@@ -165,6 +211,56 @@ export default function Customers() {
       </Modal>
 
       <Toast show={toast.show} type={toast.type} message={toast.message} onClose={() => setToast(t => ({ ...t, show: false }))} />
+
+      {/* Modal QR Code */}
+      <Modal show={!!qrCustomer} onClose={() => setQrCustomer(null)} title="QR Check-In Pelanggan">
+        {qrCustomer && (() => {
+          const scanUrl = `${window.location.origin}/scan/${qrCustomer.customerId}`;
+          return (
+            <div className="text-center">
+              <p className="font-semibold text-teks mb-0.5">{qrCustomer.customerName}</p>
+              <p className="text-sm text-teks-samping mb-4">{qrCustomer.phone} · {qrCustomer.segment}</p>
+
+              <div className="flex justify-center mb-3">
+                <div className="p-4 border-2 border-garis rounded-2xl inline-block bg-white">
+                  <QRCodeSVG
+                    id="qr-modal-svg"
+                    value={scanUrl}
+                    size={200}
+                    level="M"
+                    includeMargin={false}
+                  />
+                </div>
+              </div>
+
+              {/* URL yang bisa diklik/disalin */}
+              <a
+                href={scanUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="block text-xs text-primary hover:underline mb-5 break-all px-2"
+              >
+                {scanUrl}
+              </a>
+
+              <div className="flex gap-2">
+                <Button type="secondary" className="flex-1" onClick={() => setQrCustomer(null)}>Tutup</Button>
+                <a
+                  href={scanUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 flex items-center justify-center gap-1 border border-garis rounded-xl text-sm font-semibold text-teks hover:bg-latar transition"
+                >
+                  Buka Tab
+                </a>
+                <Button type="primary" className="flex-1" onClick={handleDownloadQR}>
+                  <span className="flex items-center justify-center gap-1"><MdDownload /> Unduh</span>
+                </Button>
+              </div>
+            </div>
+          );
+        })()}
+      </Modal>
     </div>
   );
 }

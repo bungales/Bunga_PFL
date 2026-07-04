@@ -18,9 +18,12 @@ const Reports = React.lazy(() => import("./pages/admin/Reports"));
 const Components = React.lazy(() => import("./pages/admin/Components"));
 const Users = React.lazy(() => import("./pages/admin/Users"));
 const CustomerDetail = React.lazy(() => import("./pages/admin/CustomerDetail"));
+const CustomerQR = React.lazy(() => import("./pages/admin/CustomerQR"));
 
 // Lazy load GUEST pages
 const LandingPage = React.lazy(() => import("./pages/guest/LandingPage"));
+const QRScan = React.lazy(() => import("./pages/guest/QRScan"));
+const MemberPage = React.lazy(() => import("./pages/guest/MemberPage"));
 
 // Lazy load AUTH pages
 const Login = React.lazy(() => import("./pages/auth/Login"));
@@ -30,16 +33,25 @@ const Forgot = React.lazy(() => import("./pages/auth/Forgot"));
 // Lazy load OTHER pages
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
-// Guard: redirect ke /login jika belum login
+// Guard: redirect ke /login jika belum login admin
 function PrivateRoute({ children }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
-// Guard: redirect ke /admin jika sudah login
+// Guard untuk halaman member
+function MemberRoute({ children }) {
+  const memberId = localStorage.getItem("memberId");
+  return memberId ? children : <Navigate to="/login" replace />;
+}
+
+// Guard: kalau sudah login admin → /admin, kalau sudah login member → /member
 function GuestOnlyRoute({ children }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-  return isLoggedIn ? <Navigate to="/admin" replace /> : children;
+  const memberId = localStorage.getItem("memberId");
+  if (memberId) return <Navigate to="/member" replace />;
+  if (isLoggedIn) return <Navigate to="/admin" replace />;
+  return children;
 }
 
 export default function App() {
@@ -49,10 +61,12 @@ export default function App() {
         {/* GUEST Routes - accessible without login */}
         <Route element={<GuestLayout />}>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/scan/:customerId" element={<QRScan />} />
+          <Route path="/member" element={<MemberRoute><MemberPage /></MemberRoute>} />
         </Route>
 
-        {/* AUTH Routes - only for non-logged users */}
-        <Route element={<GuestOnlyRoute><AuthLayout /></GuestOnlyRoute>}>
+        {/* AUTH Routes */}
+        <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot" element={<Forgot />} />
@@ -64,6 +78,7 @@ export default function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="customers" element={<Customers />} />
           <Route path="customers/:id" element={<CustomerDetail />} />
+          <Route path="customers/:id/qr" element={<CustomerQR />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="tracking" element={<Tracking />} />
           <Route path="notifications" element={<Notifications />} />
