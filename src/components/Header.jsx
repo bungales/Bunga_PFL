@@ -5,7 +5,7 @@ import { SlSettings } from "react-icons/sl";
 export default function Header() {
   const [search, setSearch] = useState("");
   const userName = localStorage.getItem("userName") || "Admin";
-  const userRole = localStorage.getItem("userRole") || "Super Admin";
+  const userRole = localStorage.getItem("userRole") || "Admin";
   const initials = userName.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
 
   return (

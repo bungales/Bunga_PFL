@@ -180,9 +180,20 @@ export default function LandingPage() {
                   <div style={{ fontSize:12, color:'#64748b' }}>Netto Express Laundry | KIDB</div>
                 </div>
               </div>
-              <p style={{ fontSize:13, color:'#475569', lineHeight:1.7 }}>Jl. Sepakat No.98, Sukamaju Selatan, Kec. Balikpapan Barat, Kota Balikpapan, Kalimantan Timur 76131</p>
+              <p style={{ fontSize:13, color:'#475569', lineHeight:1.7 }}>Jl. Kuau No.2A, Kp. Melayu, Sukajadi, Kota Pekanbaru, Riau 28122</p>
             </div>
-            <div style={{ background:'#e2e8f0', display:'flex', alignItems:'center', justifyContent:'center', minHeight:200, fontSize:48 }}>🗺️</div>
+            <div style={{ minHeight:200, overflow:'hidden' }}>
+              <iframe
+                title="Lokasi Netto Laundry"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.4!2d101.4328!3d0.5228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d5a977b5555555%3A0x1!2sJl.+Kuau+No.2A%2C+Kp.+Melayu%2C+Sukajadi%2C+Kota+Pekanbaru%2C+Riau+28122!5e0!3m2!1sid!2sid!4v1720000000000"
+                width="100%"
+                height="100%"
+                style={{ border:0, display:'block', minHeight:200 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
           </div>
         </div>
       </section>

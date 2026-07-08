@@ -1,10 +1,11 @@
+import { useState } from "react";
 import PageHeader from "../../components/PageHeader";
 import Card from "../../components/Card";
 import SectionTitle from "../../components/SectionTitle";
 import Button from "../../components/Button";
 import customers from "../../data/customers.json";
 import transactions from "../../data/transactions.json";
-import { MdDownload, MdTrendingUp, MdPeople, MdRepeat, MdStar, MdAttachMoney } from "react-icons/md";
+import { MdDownload, MdTrendingUp, MdPeople, MdRepeat, MdStar, MdAttachMoney, MdTableChart, MdPictureAsPdf } from "react-icons/md";
 
 const monthlyData = [
   { month: "Jan", revenue: 1200000, customers: 18, transactions: 45 },
@@ -17,10 +18,43 @@ const monthlyData = [
 const maxRevenue = Math.max(...monthlyData.map(d => d.revenue));
 
 export default function Reports() {
+  const [showExportMenu, setShowExportMenu] = useState(false);
   const activeCount = customers.filter(c => c.status === "active").length;
   const inactiveCount = customers.filter(c => c.status === "inactive").length;
   const totalRevenue = transactions.reduce((a, b) => a + b.price, 0);
   const retention = ((activeCount / customers.length) * 100).toFixed(0);
+
+  const exportCSV = () => {
+    const rows = [
+      ["ID", "Pelanggan", "Layanan", "Berat (kg)", "Total (Rp)", "Tanggal", "Status"],
+      ...transactions.map(t => [t.id, t.customerName, t.service, t.weight, t.price, t.date, t.status])
+    ];
+    const csv = rows.map(r => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `laporan-transaksi-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setShowExportMenu(false);
+  };
+
+  const exportCustomersCSV = () => {
+    const rows = [
+      ["ID", "Nama", "Email", "No. HP", "Segmen", "Poin", "Total Belanja", "Status"],
+      ...customers.map(c => [c.customerId, c.customerName, c.email, c.phone, c.segment, c.points, c.totalSpent, c.status])
+    ];
+    const csv = rows.map(r => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `laporan-pelanggan-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setShowExportMenu(false);
+  };
 
   const kpis = [
     { label: "Pelanggan Aktif", value: activeCount, icon: <MdPeople />, bg: "bg-blue-50", text: "text-blue-600", trend: "+5%" },
@@ -32,9 +66,39 @@ export default function Reports() {
   return (
     <div>
       <PageHeader title="Laporan CRM" breadcrumb={["Dashboard", "Laporan"]}>
-        <Button type="primary">
-          <span className="flex items-center gap-1"><MdDownload className="text-lg" /> Export Laporan</span>
-        </Button>
+        <div className="relative">
+          <button
+            onClick={() => setShowExportMenu(v => !v)}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-blue-200 transition-all text-sm">
+            <MdDownload className="text-lg" /> Export Laporan ▾
+          </button>
+          {showExportMenu && (
+            <div className="absolute right-0 top-12 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 w-56 overflow-hidden">
+              <div className="p-2">
+                <button onClick={exportCSV}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-left transition-colors text-sm">
+                  <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
+                    <MdTableChart />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-teks">Data Transaksi</p>
+                    <p className="text-xs text-teks-samping">Download .CSV</p>
+                  </div>
+                </button>
+                <button onClick={exportCustomersCSV}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 text-left transition-colors text-sm">
+                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+                    <MdPeople />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-teks">Data Pelanggan</p>
+                    <p className="text-xs text-teks-samping">Download .CSV</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </PageHeader>
 
       {/* KPI Cards */}
